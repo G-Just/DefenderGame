@@ -12,6 +12,8 @@ export const gameState = {
 export const canvas = document.getElementById("canvas");
 export const pen = canvas.getContext("2d");
 export const FPS = 60;
+export const CANVAS_WIDTH = 1920;
+export const CANVAS_HEIGHT = 950;
 export const enemyList = [];
 export const weaponList = [];
 export const projectileList = [];
@@ -60,8 +62,19 @@ export const enemyTypes = {
     },
 };
 export const weaponTypes = {
-    bow: { attackSpeed: 1, damage: 30, projectileSprite: "./dist/Art/Sprites/arrow.png", range: 1500 }, // Base weapon shoots arrows average damage average fire rate
-    // fireBall: {}, // Shoots fireballs higher damage low fire rate
-    // mortar: {}, // Makes AOE circles that deal damage
+    bow: {
+        attackSpeed: 1,
+        damage: 20,
+        projectileSprite: "./dist/Art/Sprites/arrow.png",
+        range: CANVAS_WIDTH * 0.6,
+        projectileSpeed: 10,
+    },
+    fireWand: {
+        attackSpeed: 0.2,
+        damage: 100,
+        projectileSprite: "./dist/Art/Sprites/fireBall.png",
+        range: CANVAS_WIDTH * 0.9,
+        projectileSpeed: 15,
+    },
     // needles: {}, // Shoots a barrage of needles in a cone, low damage high fire rate
 };

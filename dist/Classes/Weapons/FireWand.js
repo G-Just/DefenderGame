@@ -1,9 +1,9 @@
 import { Weapon } from "../Weapon.js";
 import { Projectile } from "../Projectile.js";
 import { player } from "../../Shared.js";
-export class Bow extends Weapon {
+export class FireWand extends Weapon {
     constructor() {
-        super("bow");
+        super("fireWand");
     }
     shoot() {
         const closestEnemy = this.getClosestEnemy();

@@ -1,12 +1,12 @@
-import { pen } from "../Shared.js";
+import { pen, CANVAS_HEIGHT } from "../Shared.js";
 export class Player {
-    constructor(height = 50, width = 40) {
-        this.y = window.innerHeight / 2 - height / 2;
-        this.x = 90 - width / 2;
-        this.height = height;
-        this.width = width;
+    constructor() {
         this.heroImage = new Image();
         this.heroImage.src = "./dist/Art/Sprites/hero.png";
+        this.width = this.heroImage.width * 1.5;
+        this.height = this.heroImage.height * 1.5;
+        this.y = CANVAS_HEIGHT / 2 - this.height / 2;
+        this.x = 90 - this.width / 2;
     }
     getPosition() {
         return { x: this.x, y: this.y };

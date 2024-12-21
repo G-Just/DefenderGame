@@ -1,10 +1,23 @@
 import { Enemy } from "./Classes/Enemy.js";
 import { Bow } from "./Classes/Weapons/Bow.js";
-import { enemyList, weaponList, player, wall, projectileList, FPS, canvas, pen } from "./Shared.js";
+import { FireWand } from "./Classes/Weapons/FireWand.js";
 import { getRandomEnemyType, getRandomInt } from "./Helpers.js";
+import {
+    enemyList,
+    weaponList,
+    player,
+    wall,
+    projectileList,
+    FPS,
+    canvas,
+    pen,
+    gameState,
+    CANVAS_HEIGHT,
+    CANVAS_WIDTH,
+} from "./Shared.js";
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.width = CANVAS_WIDTH;
+canvas.height = CANVAS_HEIGHT;
 
 const background = new Image();
 background.src = "./dist/Art/Sprites/background.png";
@@ -13,7 +26,7 @@ setInterval(() => {
     enemyList.push(new Enemy(getRandomEnemyType()));
 }, getRandomInt(1000, 10000));
 
-weaponList.push(new Bow());
+weaponList.push(new Bow(), new FireWand());
 
 function gameLoop(): void {
     const interval = 1000 / FPS;
@@ -27,6 +40,10 @@ function gameLoop(): void {
 
             pen.clearRect(0, 0, canvas.width, canvas.height);
             pen.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+            pen.fillStyle = "black";
+            pen.font = "20px Consolas";
+            pen.fillText(`Score: ${gameState.score}`, CANVAS_WIDTH - 200, 30);
 
             player.draw();
             wall.draw();
@@ -92,10 +109,10 @@ function executeWeaponAttacking(): void {
 function projectileCollisionCheck(): void {
     projectileList.forEach((projectile) => {
         // out of bounds check
-        if (projectile.getPosition().x > window.innerWidth || projectile.getPosition().x < 0) {
+        if (projectile.getPosition().x > CANVAS_WIDTH || projectile.getPosition().x < 0) {
             projectileList.splice(projectileList.indexOf(projectile), 1);
         }
-        if (projectile.getPosition().y > window.innerHeight || projectile.getPosition().y < 0) {
+        if (projectile.getPosition().y > CANVAS_HEIGHT || projectile.getPosition().y < 0) {
             projectileList.splice(projectileList.indexOf(projectile), 1);
         }
     });
@@ -117,6 +134,7 @@ function projectileCollisionCheck(): void {
                 projectilePosition.y < enemyPosition.y + enemySize.height &&
                 projectilePosition.y + projectileSize.height > enemyPosition.y
             ) {
+                // TODO: make floating damage numbers
                 enemy.takeDamage(projectile.getDamage());
                 projectileList.splice(j, 1);
             }

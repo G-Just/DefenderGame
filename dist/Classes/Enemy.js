@@ -1,12 +1,12 @@
-import { enemyTypes, gameState, wall, pen, enemyList } from "../Shared.js";
+import { enemyTypes, gameState, wall, pen, enemyList, CANVAS_WIDTH, CANVAS_HEIGHT } from "../Shared.js";
 import { getRandomInt } from "../Helpers.js";
 export class Enemy {
     constructor(enemyType = "normal") {
         this.enemyType = enemyTypes[enemyType];
         this.name = enemyType;
-        this.y = getRandomInt(this.enemyType.height + 15, window.innerHeight - this.enemyType.height - 15);
+        this.y = getRandomInt(this.enemyType.height + 15, CANVAS_HEIGHT - this.enemyType.height - 15);
         this.movementSpeed = this.enemyType.speed;
-        this.x = window.innerWidth;
+        this.x = CANVAS_WIDTH;
         this.height = this.enemyType.height;
         this.width = this.enemyType.width;
         this.attackSpeed = this.enemyType.attackSpeed;

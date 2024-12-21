@@ -1,4 +1,4 @@
-import { pen } from "../Shared.js";
+import { pen, CANVAS_WIDTH, CANVAS_HEIGHT } from "../Shared.js";
 
 export class Wall {
     private y: number;
@@ -12,7 +12,7 @@ export class Wall {
         this.x = 200;
         this.y = 0;
         this.width = 20;
-        this.height = window.innerHeight;
+        this.height = CANVAS_HEIGHT;
         this.currentWallHealth = 1000;
         this.maxWallHealth = 1000;
     }
@@ -36,7 +36,7 @@ export class Wall {
     //     // }, 50);
 
     //     pen.fillStyle = "white";
-    //     pen.fillRect(window.innerWidth / 2 - 295 + percentageHealth, 14, change, 17);
+    //     pen.fillRect(CANVAS_WIDTH / 2 - 295 + percentageHealth, 14, change, 17);
     // }
 
     takeDamage(damage: number): void {
@@ -50,10 +50,10 @@ export class Wall {
 
         // Drawing a health bar
         pen.fillStyle = "black";
-        pen.fillRect(window.innerWidth / 2 - 300, 10, 600, 25);
+        pen.fillRect(CANVAS_WIDTH / 2 - 300, 10, 600, 25);
         pen.fillStyle = "red";
         const percentageHealth = (590 * this.currentWallHealth) / this.maxWallHealth;
 
-        pen.fillRect(window.innerWidth / 2 - 295, 14, percentageHealth <= 0 ? 0 : percentageHealth, 17);
+        pen.fillRect(CANVAS_WIDTH / 2 - 295, 14, percentageHealth <= 0 ? 0 : percentageHealth, 17);
     }
 }
