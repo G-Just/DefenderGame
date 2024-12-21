@@ -97,6 +97,7 @@ export class Enemy {
         this.currentHealth -= damage;
         if (this.currentHealth <= 0) {
             gameState.score += this.enemyType.points;
+            gameState.currentXp += this.enemyType.xpDrop;
             gameState.enemiesKilled++;
             enemyList.splice(enemyList.indexOf(this), 1);
         } else {

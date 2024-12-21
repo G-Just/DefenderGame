@@ -55,5 +55,10 @@ export class Wall {
         const percentageHealth = (590 * this.currentWallHealth) / this.maxWallHealth;
 
         pen.fillRect(CANVAS_WIDTH / 2 - 295, 14, percentageHealth <= 0 ? 0 : percentageHealth, 17);
+
+        pen.font = "16px Consolas";
+        pen.fillStyle = "white";
+        pen.textAlign = "center";
+        pen.fillText(`HP: ${this.currentWallHealth} / ${this.maxWallHealth}`, CANVAS_WIDTH / 2, 27);
     }
 }

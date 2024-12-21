@@ -1,6 +1,11 @@
 import { Weapon } from "../Weapon.js";
 import { Projectile } from "../Projectile.js";
-import { enemyList, player } from "../../Shared.js";
+import { player } from "../../Shared.js";
+
+const bowShootingSound = new Howl({
+    src: ["../../dist/Art/Sound/bowSFX.mp3"],
+    volume: 0.1,
+});
 
 export class Bow extends Weapon {
     constructor() {
@@ -13,6 +18,7 @@ export class Bow extends Weapon {
         if (closestEnemy) {
             const distance = Math.hypot(closestEnemy.getPosition().x - player.getPosition().x);
             if (distance <= this.range) {
+                bowShootingSound.play();
                 return new Projectile(
                     player.getPosition().x,
                     player.getPosition().y,

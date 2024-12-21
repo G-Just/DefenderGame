@@ -11,10 +11,10 @@ setInterval(() => {
     enemyList.push(new Enemy(getRandomEnemyType()));
 }, getRandomInt(1000, 10000));
 weaponList.push(new Bow(), new FireWand());
-function gameLoop() {
+function drawLoop() {
     const interval = 1000 / FPS;
     let lastTime = 0;
-    function gameLoop(currentTime) {
+    function drawLoop(currentTime) {
         const deltaTime = currentTime - lastTime;
         if (deltaTime > interval) {
             lastTime = currentTime - (deltaTime % interval);
@@ -23,6 +23,19 @@ function gameLoop() {
             pen.fillStyle = "black";
             pen.font = "20px Consolas";
             pen.fillText(`Score: ${gameState.score}`, CANVAS_WIDTH - 200, 30);
+            pen.fillStyle = "black";
+            pen.fillRect(20, 10, 150, 25);
+            pen.fillStyle = "orange";
+            const percentageXp = (150 * gameState.currentXp) / gameState.xpToLevel;
+            pen.fillRect(22, 12, percentageXp, 21);
+            pen.font = "16px Consolas";
+            pen.fillStyle = "white";
+            pen.textAlign = "center";
+            pen.fillText(`XP: ${gameState.currentXp} / ${gameState.xpToLevel}`, 92, 27);
+            pen.fillStyle = "black";
+            pen.textAlign = "center";
+            pen.font = "20px Consolas";
+            pen.fillText(`Your Level: ${gameState.level}`, 95, 55);
             player.draw();
             wall.draw();
             enemyList.forEach((enemy) => {
@@ -34,9 +47,9 @@ function gameLoop() {
                 projectile.draw();
             });
         }
-        requestAnimationFrame(gameLoop);
+        requestAnimationFrame(drawLoop);
     }
-    requestAnimationFrame(gameLoop);
+    requestAnimationFrame(drawLoop);
 }
 function executeEnemyAttacking() {
     const lastAttackTimes = new Map();
@@ -104,7 +117,17 @@ function projectileCollisionCheck() {
     }
     requestAnimationFrame(projectileCollisionCheck);
 }
-gameLoop();
+function stateLogicChecks() {
+    if (gameState.currentXp >= gameState.xpToLevel) {
+        gameState.level++;
+        gameState.currentXp = 0;
+        gameState.xpToLevel *= 1.2;
+        // trigger a levelup event where player picks weapons / upgrades
+    }
+    requestAnimationFrame(stateLogicChecks);
+}
+drawLoop();
 executeEnemyAttacking();
 executeWeaponAttacking();
 projectileCollisionCheck();
+stateLogicChecks();

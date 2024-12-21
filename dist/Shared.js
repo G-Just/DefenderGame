@@ -4,7 +4,8 @@ import { Wall } from "./Classes/Wall.js";
 export const gameState = {
     score: 0,
     level: 1,
-    xp: 0,
+    currentXp: 0,
+    xpToLevel: 100,
     enemiesKilled: 0,
     gameLost: false,
     gameStarted: true,
@@ -29,6 +30,7 @@ export const enemyTypes = {
         damage: 10,
         attackSpeed: 1,
         points: 5,
+        xpDrop: 5,
     },
     fast: {
         color: "green",
@@ -39,6 +41,7 @@ export const enemyTypes = {
         damage: 7,
         attackSpeed: 1.1,
         points: 7,
+        xpDrop: 7,
     },
     tank: {
         color: "blue",
@@ -49,6 +52,7 @@ export const enemyTypes = {
         damage: 20,
         attackSpeed: 0.7,
         points: 10,
+        xpDrop: 10,
     },
     boss: {
         color: "purple",
@@ -59,6 +63,7 @@ export const enemyTypes = {
         damage: 50,
         attackSpeed: 0.5,
         points: 50,
+        xpDrop: 50,
     },
 };
 export const weaponTypes = {
