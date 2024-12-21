@@ -13,7 +13,7 @@ export class Player {
         this.height = height;
         this.width = width;
         this.heroImage = new Image();
-        this.heroImage.src = "dist/art/sprites/hero.png";
+        this.heroImage.src = "./dist/Art/Sprites/hero.png";
     }
 
     getPosition(): { x: number; y: number } {
