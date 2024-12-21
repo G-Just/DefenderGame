@@ -1,5 +1,0 @@
-Idea : 
-A field with a wall at the bottom, and a hero behind it.
-Hero has abilities that a player can choose.
-Hero shoots at a closes enemy.
-Enemies spawn at the top and move down to destroy the wall.
