@@ -8,8 +8,18 @@
     <body>
         <canvas id="canvas"></canvas>
     </body>
-    <script type="module" src="./dist/Engine.js"></script>
+    <script>
+        var exports = {};
+    </script>
 
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.js"
+        integrity="sha512-7Zgn4mmO9yGGB1j9yP0mZvUPWBVg0fCcUMsYUV6FX7XIKQfb/dhGxsKh794YAzXH2F/+Z3eJL4mrTilrT2ZeFQ=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+    ></script>
+
+    <script type="module" src="./dist/Engine.js"></script>
     <style>
         body {
             margin: 0;

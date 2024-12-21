@@ -1,36 +1,22 @@
-import { Player } from "./Classes/Player.js";
-import { Wall } from "./Classes/Wall.js";
 import { Enemy } from "./Classes/Enemy.js";
-import { Weapon } from "./Classes/Weapon.js";
-import { gameState, enemyTypes } from "./Shared.js";
-
-const canvas = document.getElementById("canvas") as HTMLCanvasElement;
-const pen = canvas.getContext("2d") as CanvasRenderingContext2D;
+import { Bow } from "./Classes/Weapons/Bow.js";
+import { enemyList, weaponList, player, wall, projectileList, FPS, canvas, pen } from "./Shared.js";
+import { getRandomEnemyType, getRandomInt } from "./Helpers.js";
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const background = new Image();
-background.src = "./dist/Art/background.png";
+background.src = "./dist/Art/Sprites/background.png";
 
-const player = new Player();
-const wall = new Wall();
+setInterval(() => {
+    enemyList.push(new Enemy(getRandomEnemyType()));
+}, getRandomInt(1000, 10000));
 
-const getRandomEnemyType = () =>
-    Object.keys(enemyTypes)[Math.floor(Math.random() * Object.keys(enemyTypes).length)];
-
-export const enemyList = [
-    new Enemy(getRandomEnemyType()),
-    new Enemy(getRandomEnemyType()),
-    new Enemy(getRandomEnemyType()),
-    new Enemy(getRandomEnemyType()),
-];
-
-const weaponList = [new Weapon()];
+weaponList.push(new Bow());
 
 function gameLoop(): void {
-    const fps = 60;
-    const interval = 1000 / fps;
+    const interval = 1000 / FPS;
     let lastTime = 0;
 
     function gameLoop(currentTime: number) {
@@ -42,14 +28,18 @@ function gameLoop(): void {
             pen.clearRect(0, 0, canvas.width, canvas.height);
             pen.drawImage(background, 0, 0, canvas.width, canvas.height);
 
-            player.draw(pen);
-            wall.draw(pen);
+            player.draw();
+            wall.draw();
 
             enemyList.forEach((enemy) => {
                 enemy.move();
-                enemy.draw(pen);
+                enemy.draw();
             });
-            // console.log(gameState.wallHealth);
+
+            projectileList.forEach((projectile) => {
+                projectile.move();
+                projectile.draw();
+            });
         }
         requestAnimationFrame(gameLoop);
     }
@@ -57,43 +47,85 @@ function gameLoop(): void {
 }
 
 function executeEnemyAttacking(): void {
-    enemyList.forEach((enemy) => {
-        const attackSpeed = enemy.attackSpeed;
-        const interval = 1000 / attackSpeed;
-        let lastTime = 0;
-        function attackLoop(currentTime: number) {
-            const deltaTime = currentTime - lastTime;
+    const lastAttackTimes = new Map<Enemy, number>();
 
-            if (deltaTime > interval) {
-                lastTime = currentTime - (deltaTime % interval);
-                if (enemy.isAttacking) {
-                    enemy.doDamage();
-                }
+    function enemyAttackLoop(currentTime: number) {
+        enemyList.forEach((enemy) => {
+            const attackSpeed = enemy.getAttackSpeed();
+            const interval = 1000 / attackSpeed;
+
+            const lastTime = lastAttackTimes.get(enemy) || 0;
+
+            if (enemy.isAttacking && currentTime - lastTime >= interval) {
+                enemy.doDamage();
+                lastAttackTimes.set(enemy, currentTime);
             }
-            requestAnimationFrame(attackLoop);
-        }
-        requestAnimationFrame(attackLoop);
-    });
+        });
+        requestAnimationFrame(enemyAttackLoop);
+    }
+    requestAnimationFrame(enemyAttackLoop);
 }
 
 function executeWeaponAttacking(): void {
-    weaponList.forEach((weapon) => {
-        const attackSpeed = weapon.attackSpeed;
-        const interval = 1000 / attackSpeed;
-        let lastTime = 0;
-        function attackLoop(currentTime: number) {
-            const deltaTime = currentTime - lastTime;
+    const lastAttackTimes = new Map<Object, number>();
 
-            if (deltaTime > interval) {
-                lastTime = currentTime - (deltaTime % interval);
-                weapon.shoot(pen);
+    function weaponAttackLoop(currentTime: number) {
+        weaponList.forEach((weapon) => {
+            const attackSpeed = weapon.getAttackSpeed();
+            const interval = 1000 / attackSpeed;
+
+            const lastTime = lastAttackTimes.get(weapon) || 0;
+
+            if (currentTime - lastTime >= interval) {
+                const projectile = weapon.shoot();
+                if (projectile) {
+                    projectileList.push(projectile);
+                }
+                lastAttackTimes.set(weapon, currentTime);
             }
-            requestAnimationFrame(attackLoop);
+        });
+        requestAnimationFrame(weaponAttackLoop); // Continue the loop.
+    }
+    requestAnimationFrame(weaponAttackLoop); // Start the loop.
+}
+
+function projectileCollisionCheck(): void {
+    projectileList.forEach((projectile) => {
+        // out of bounds check
+        if (projectile.getPosition().x > window.innerWidth || projectile.getPosition().x < 0) {
+            projectileList.splice(projectileList.indexOf(projectile), 1);
         }
-        requestAnimationFrame(attackLoop);
+        if (projectile.getPosition().y > window.innerHeight || projectile.getPosition().y < 0) {
+            projectileList.splice(projectileList.indexOf(projectile), 1);
+        }
     });
+
+    // enemy collision check
+    for (let i = 0; i < enemyList.length; i++) {
+        for (let j = 0; j < projectileList.length; j++) {
+            const enemy = enemyList[i];
+            const projectile = projectileList[j];
+            const enemyPosition = enemy.getPosition();
+            const projectilePosition = projectile.getPosition();
+
+            const enemySize = enemy.getSize();
+            const projectileSize = projectile.getSize();
+
+            if (
+                projectilePosition.x < enemyPosition.x + enemySize.width &&
+                projectilePosition.x + projectileSize.width > enemyPosition.x &&
+                projectilePosition.y < enemyPosition.y + enemySize.height &&
+                projectilePosition.y + projectileSize.height > enemyPosition.y
+            ) {
+                enemy.takeDamage(projectile.getDamage());
+                projectileList.splice(j, 1);
+            }
+        }
+    }
+    requestAnimationFrame(projectileCollisionCheck);
 }
 
 gameLoop();
 executeEnemyAttacking();
 executeWeaponAttacking();
+projectileCollisionCheck();

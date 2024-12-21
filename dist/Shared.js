@@ -1,13 +1,22 @@
+import { Player } from "./Classes/Player.js";
+import { Wall } from "./Classes/Wall.js";
 // ============ Data ============
 export const gameState = {
     score: 0,
-    wallHealth: 1000,
     level: 1,
     xp: 0,
     enemiesKilled: 0,
     gameLost: false,
-    gameStarted: false,
+    gameStarted: true,
 };
+export const canvas = document.getElementById("canvas");
+export const pen = canvas.getContext("2d");
+export const FPS = 60;
+export const enemyList = [];
+export const weaponList = [];
+export const projectileList = [];
+export const player = new Player();
+export const wall = new Wall();
 export const enemyTypes = {
     normal: {
         color: "red",
@@ -51,7 +60,7 @@ export const enemyTypes = {
     },
 };
 export const weaponTypes = {
-    bow: { attackSpeed: 1, damage: 30 }, // Base weapon shoots arrows average damage average fire rate
+    bow: { attackSpeed: 1, damage: 30, projectileSprite: "./dist/Art/Sprites/arrow.png", range: 1500 }, // Base weapon shoots arrows average damage average fire rate
     // fireBall: {}, // Shoots fireballs higher damage low fire rate
     // mortar: {}, // Makes AOE circles that deal damage
     // needles: {}, // Shoots a barrage of needles in a cone, low damage high fire rate

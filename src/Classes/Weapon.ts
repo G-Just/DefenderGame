@@ -1,45 +1,42 @@
 import { weaponTypes, WeaponType } from "../Shared.js";
-import { Enemy } from "./Enemy.js";
-import { enemyList } from "../Engine.js";
 
 export class Weapon {
-    public weaponType: WeaponType;
-    public name: string;
-    public damage: number;
-    public x: number;
-    public y: number;
-    public attackSpeed: number;
+    protected weaponType: WeaponType;
+    protected name: string;
+    protected damage: number;
+    protected attackSpeed: number;
+    protected range: number;
+    protected projectileSprite: HTMLImageElement;
 
-    constructor(weaponType = "bow") {
+    constructor(weaponType: string = "bow") {
         this.weaponType = weaponTypes[weaponType];
         this.name = weaponType;
         this.attackSpeed = this.weaponType.attackSpeed;
         this.damage = this.weaponType.damage;
-        this.y = window.innerHeight / 2;
-        this.x = 90;
+        this.projectileSprite = new Image();
+        this.projectileSprite.src = this.weaponType.projectileSprite;
+        this.range = this.weaponType.range;
     }
 
-    shoot(pen: CanvasRenderingContext2D): void {
-        const closestEnemy = enemyList.reduce<{ enemy: Enemy; distance: number } | null>(
-            (closest, enemy) => {
-                const distance = Math.hypot(enemy.x - this.x, enemy.y - this.y);
-                if (!closest || distance < closest.distance) {
-                    return { enemy, distance };
-                }
-                return closest;
-            },
-            null
-        )?.enemy;
-
-        this.doDamage(closestEnemy);
+    getAttackSpeed(): number {
+        return this.attackSpeed;
     }
 
-    doDamage(closestEnemy: Enemy | undefined): void {
-        if (closestEnemy) {
-            closestEnemy.takeDamage(this.damage);
-            if (closestEnemy.currentHealth <= 0) {
-                enemyList.splice(enemyList.indexOf(closestEnemy), 1);
-            }
-        }
+    getDamage(): number {
+        return this.damage;
+    }
+
+    getName(): string {
+        return this.name;
+    }
+
+    getSprite(): HTMLImageElement {
+        return this.projectileSprite;
+    }
+
+    shoot(): any {
+        console.warn(
+            "Shoot method was called. This was called from the parent class.\n\nYou should override this method in the child class"
+        );
     }
 }

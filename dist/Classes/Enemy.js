@@ -1,10 +1,11 @@
-import { enemyTypes, gameState } from "../Shared.js";
+import { enemyTypes, gameState, wall, pen, enemyList } from "../Shared.js";
 import { getRandomInt } from "../Helpers.js";
 export class Enemy {
     constructor(enemyType = "normal") {
         this.enemyType = enemyTypes[enemyType];
         this.name = enemyType;
         this.y = getRandomInt(this.enemyType.height + 15, window.innerHeight - this.enemyType.height - 15);
+        this.movementSpeed = this.enemyType.speed;
         this.x = window.innerWidth;
         this.height = this.enemyType.height;
         this.width = this.enemyType.width;
@@ -14,7 +15,28 @@ export class Enemy {
         this.color = this.enemyType.color;
         this.isAttacking = false;
     }
-    draw(pen) {
+    getHealth() {
+        return this.currentHealth;
+    }
+    getPosition() {
+        return { x: this.x, y: this.y };
+    }
+    getSize() {
+        return { width: this.width, height: this.height };
+    }
+    getMovementSpeed() {
+        return this.movementSpeed;
+    }
+    getAttackSpeed() {
+        return this.attackSpeed;
+    }
+    getName() {
+        return this.name;
+    }
+    getDamage() {
+        return this.enemyType.damage;
+    }
+    draw() {
         pen.fillStyle = this.color;
         pen.fillRect(this.x, this.y, this.width, this.height);
         // Drawing a health bar above the enemy
@@ -29,15 +51,12 @@ export class Enemy {
             this.x -= this.enemyType.speed;
         }
         else {
-            if (!this.isAttacking) {
-                this.doDamage();
-            }
             this.isAttacking = true;
         }
     }
     doDamage() {
         // console.log(`Enemy ${this.name} is attacking the wall for ${this.enemyType.damage} damage`);
-        gameState.wallHealth -= this.enemyType.damage;
+        wall.takeDamage(this.enemyType.damage);
         // Animation for the enemy attacking
         const originalX = this.x;
         this.x -= 3;
@@ -50,6 +69,7 @@ export class Enemy {
         if (this.currentHealth <= 0) {
             gameState.score += this.enemyType.points;
             gameState.enemiesKilled++;
+            enemyList.splice(enemyList.indexOf(this), 1);
         }
         else {
             // Flash white when taking damage

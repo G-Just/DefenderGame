@@ -1,20 +1,22 @@
-import { enemyTypes, gameState } from "../Shared.js";
+import { enemyTypes, gameState, wall, pen, enemyList } from "../Shared.js";
 import { getRandomInt } from "../Helpers.js";
-import { enemyList } from "../Engine.js";
-import type { EnemyType, GameState } from "../Shared.js";
+
+import type { EnemyType } from "../Shared.js";
 
 export class Enemy {
-    public y: number;
-    public x: number;
-    public height: number;
-    public width: number;
-    public enemyType: EnemyType;
-    public currentHealth: number;
-    public maxHealth: number;
-    public name: string;
+    private y: number;
+    private x: number;
+    private height: number;
+    private width: number;
+    private enemyType: EnemyType;
+    private currentHealth: number;
+    private maxHealth: number;
+    private name: string;
+    private attackSpeed: number;
+    private color: string;
+    private movementSpeed: number;
+
     public isAttacking: boolean;
-    public attackSpeed: number;
-    public color: string;
 
     constructor(enemyType = "normal") {
         this.enemyType = enemyTypes[enemyType];
@@ -23,6 +25,7 @@ export class Enemy {
             this.enemyType.height + 15,
             window.innerHeight - this.enemyType.height - 15
         );
+        this.movementSpeed = this.enemyType.speed;
         this.x = window.innerWidth;
         this.height = this.enemyType.height;
         this.width = this.enemyType.width;
@@ -33,7 +36,35 @@ export class Enemy {
         this.isAttacking = false;
     }
 
-    draw(pen: CanvasRenderingContext2D): void {
+    getHealth(): number {
+        return this.currentHealth;
+    }
+
+    getPosition(): { x: number; y: number } {
+        return { x: this.x, y: this.y };
+    }
+
+    getSize(): { width: number; height: number } {
+        return { width: this.width, height: this.height };
+    }
+
+    getMovementSpeed(): number {
+        return this.movementSpeed;
+    }
+
+    getAttackSpeed(): number {
+        return this.attackSpeed;
+    }
+
+    getName(): string {
+        return this.name;
+    }
+
+    getDamage(): number {
+        return this.enemyType.damage;
+    }
+
+    draw(): void {
         pen.fillStyle = this.color;
         pen.fillRect(this.x, this.y, this.width, this.height);
 
@@ -49,16 +80,13 @@ export class Enemy {
         if (this.x > 235) {
             this.x -= this.enemyType.speed;
         } else {
-            if (!this.isAttacking) {
-                this.doDamage();
-            }
             this.isAttacking = true;
         }
     }
 
     doDamage(): void {
         // console.log(`Enemy ${this.name} is attacking the wall for ${this.enemyType.damage} damage`);
-        gameState.wallHealth -= this.enemyType.damage;
+        wall.takeDamage(this.enemyType.damage);
 
         // Animation for the enemy attacking
         const originalX = this.x;
@@ -73,6 +101,7 @@ export class Enemy {
         if (this.currentHealth <= 0) {
             gameState.score += this.enemyType.points;
             gameState.enemiesKilled++;
+            enemyList.splice(enemyList.indexOf(this), 1);
         } else {
             // Flash white when taking damage
             const originalColor = this.color;
