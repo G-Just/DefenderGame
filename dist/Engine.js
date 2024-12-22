@@ -9,12 +9,15 @@ const background = new Image();
 background.src = "./dist/Art/Sprites/background.png";
 setInterval(() => {
     enemyList.push(new Enemy(getRandomEnemyType()));
-}, getRandomInt(1000, 10000));
+}, getRandomInt(500, 5000));
 weaponList.push(new Bow(), new FireWand());
 function drawLoop() {
     const interval = 1000 / FPS;
     let lastTime = 0;
     function drawLoop(currentTime) {
+        if (gameState.gamePaused) {
+            return;
+        }
         const deltaTime = currentTime - lastTime;
         if (deltaTime > interval) {
             lastTime = currentTime - (deltaTime % interval);
@@ -28,10 +31,10 @@ function drawLoop() {
             pen.fillStyle = "orange";
             const percentageXp = (150 * gameState.currentXp) / gameState.xpToLevel;
             pen.fillRect(22, 12, percentageXp, 21);
-            pen.font = "16px Consolas";
+            pen.font = "15px Consolas";
             pen.fillStyle = "white";
             pen.textAlign = "center";
-            pen.fillText(`XP: ${gameState.currentXp} / ${gameState.xpToLevel}`, 92, 27);
+            pen.fillText(`XP: ${gameState.currentXp} / ${gameState.xpToLevel}`, 91, 27);
             pen.fillStyle = "black";
             pen.textAlign = "center";
             pen.font = "20px Consolas";
@@ -54,6 +57,9 @@ function drawLoop() {
 function executeEnemyAttacking() {
     const lastAttackTimes = new Map();
     function enemyAttackLoop(currentTime) {
+        if (gameState.gamePaused) {
+            return;
+        }
         enemyList.forEach((enemy) => {
             const attackSpeed = enemy.getAttackSpeed();
             const interval = 1000 / attackSpeed;
@@ -70,6 +76,9 @@ function executeEnemyAttacking() {
 function executeWeaponAttacking() {
     const lastAttackTimes = new Map();
     function weaponAttackLoop(currentTime) {
+        if (gameState.gamePaused) {
+            return;
+        }
         weaponList.forEach((weapon) => {
             const attackSpeed = weapon.getAttackSpeed();
             const interval = 1000 / attackSpeed;
@@ -87,6 +96,9 @@ function executeWeaponAttacking() {
     requestAnimationFrame(weaponAttackLoop); // Start the loop.
 }
 function projectileCollisionCheck() {
+    if (gameState.gamePaused) {
+        return;
+    }
     projectileList.forEach((projectile) => {
         // out of bounds check
         if (projectile.getPosition().x > CANVAS_WIDTH || projectile.getPosition().x < 0) {
@@ -118,16 +130,30 @@ function projectileCollisionCheck() {
     requestAnimationFrame(projectileCollisionCheck);
 }
 function stateLogicChecks() {
+    if (gameState.gamePaused) {
+        return;
+    }
     if (gameState.currentXp >= gameState.xpToLevel) {
         gameState.level++;
         gameState.currentXp = 0;
-        gameState.xpToLevel *= 1.2;
+        gameState.xpToLevel = Math.round(gameState.xpToLevel * 1.2);
         // trigger a levelup event where player picks weapons / upgrades
+        levelup();
     }
     requestAnimationFrame(stateLogicChecks);
 }
-drawLoop();
-executeEnemyAttacking();
-executeWeaponAttacking();
-projectileCollisionCheck();
-stateLogicChecks();
+function levelup() {
+    gameState.gamePaused = true;
+    setTimeout(() => {
+        gameState.gamePaused = false;
+        run();
+    }, 2000);
+}
+function run() {
+    drawLoop();
+    executeEnemyAttacking();
+    executeWeaponAttacking();
+    projectileCollisionCheck();
+    stateLogicChecks();
+}
+run();

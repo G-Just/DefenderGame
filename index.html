@@ -7,11 +7,28 @@
     </head>
     <body>
         <canvas id="canvas"></canvas>
+        <!-- <div id="upgrade-wrapper">
+            <div class="upgrade-card upgrade-1">
+                <div class="upgrade-card-name">Name</div>
+                <div class="upgrade-card-icon">Icon</div>
+                <div class="upgrade-card-info">Info</div>
+            </div>
+            <div class="upgrade-card upgrade-2">
+                <div class="upgrade-card-name">Name</div>
+                <div class="upgrade-card-icon">Icon</div>
+                <div class="upgrade-card-info">Info</div>
+            </div>
+            <div class="upgrade-card upgrade-3">
+                <div class="upgrade-card-name">Name</div>
+                <div class="upgrade-card-icon">Icon</div>
+                <div class="upgrade-card-info">Info</div>
+            </div>
+        </div> -->
     </body>
+
     <script>
         var exports = {};
     </script>
-
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.js"
         integrity="sha512-7Zgn4mmO9yGGB1j9yP0mZvUPWBVg0fCcUMsYUV6FX7XIKQfb/dhGxsKh794YAzXH2F/+Z3eJL4mrTilrT2ZeFQ=="
@@ -21,6 +38,7 @@
     <script type="module" src="./dist/Engine.js"></script>
     <style>
         body {
+            box-sizing: border-box;
             background-color: black;
             margin: 0;
             padding: 0;
@@ -28,6 +46,38 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+        }
+
+        #upgrade-wrapper {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            gap: 50px;
+        }
+
+        .upgrade-card {
+            cursor: pointer;
+            height: 450px;
+            width: 350px;
+        }
+
+        .upgrade-card-name {
+            height: 15%;
+            border: 2px solid black;
+            border-bottom: 0;
+        }
+
+        .upgrade-card-icon {
+            height: 50%;
+            border: 2px solid black;
+            border-bottom: 0;
+        }
+
+        .upgrade-card-info {
+            height: 35%;
+            border: 2px solid black;
         }
     </style>
 </html>
