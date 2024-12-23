@@ -14,6 +14,7 @@ export class Enemy {
         this.maxHealth = this.enemyType.health;
         this.color = this.enemyType.color;
         this.isAttacking = false;
+        this.xpDrop = this.enemyType.xpDrop;
     }
     getHealth() {
         return this.currentHealth;
@@ -35,6 +36,12 @@ export class Enemy {
     }
     getDamage() {
         return this.enemyType.damage;
+    }
+    setMovementSpeed(movementSpeed) {
+        this.movementSpeed = movementSpeed;
+    }
+    setXpDrop(xpDrop) {
+        this.xpDrop = xpDrop;
     }
     draw() {
         pen.fillStyle = this.color;

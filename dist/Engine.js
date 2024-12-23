@@ -1,7 +1,8 @@
 import { Enemy } from "./Classes/Enemy.js";
+import { LevelUp } from "./Classes/LevelUp.js";
 import { Bow } from "./Classes/Weapons/Bow.js";
 import { FireWand } from "./Classes/Weapons/FireWand.js";
-import { getRandomEnemyType, getRandomInt } from "./Helpers.js";
+import { getRandomEnemyType, getRandomInt, } from "./Helpers.js";
 import { enemyList, weaponList, player, wall, projectileList, FPS, canvas, pen, gameState, CANVAS_HEIGHT, CANVAS_WIDTH, } from "./Shared.js";
 canvas.width = CANVAS_WIDTH;
 canvas.height = CANVAS_HEIGHT;
@@ -144,6 +145,7 @@ function stateLogicChecks() {
 }
 function levelup() {
     gameState.gamePaused = true;
+    LevelUp.displayUpgrades();
     setTimeout(() => {
         gameState.gamePaused = false;
         run();

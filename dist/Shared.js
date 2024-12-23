@@ -1,5 +1,6 @@
 import { Player } from "./Classes/Player.js";
 import { Wall } from "./Classes/Wall.js";
+import { LevelUp } from "./Classes/LevelUp.js";
 // ============ Data ============
 export const gameState = {
     score: 0,
@@ -30,7 +31,7 @@ export const enemyTypes = {
         damage: 10,
         attackSpeed: 1,
         points: 5,
-        xpDrop: 5,
+        xpDrop: 50,
     },
     fast: {
         color: "green",
@@ -41,7 +42,7 @@ export const enemyTypes = {
         damage: 7,
         attackSpeed: 1.1,
         points: 7,
-        xpDrop: 7,
+        xpDrop: 50,
     },
     tank: {
         color: "blue",
@@ -52,7 +53,7 @@ export const enemyTypes = {
         damage: 20,
         attackSpeed: 0.7,
         points: 10,
-        xpDrop: 10,
+        xpDrop: 50,
     },
     boss: {
         color: "purple",
@@ -85,13 +86,35 @@ export const weaponTypes = {
     },
     // needles: {}, // Shoots a barrage of needles in a cone, low damage high fire rate
 };
-export const upgrades = {
-    increaseDamageNormal: { rarity: "normal", percentageIncrease: 10 },
-    increaseDamageRare: { rarity: "rare", percentageIncrease: 20 },
-    increaseDamageLegendary: { rarity: "legendary", percentageIncrease: 50 },
-    increaseDamageAncient: { rarity: "ancient", percentageIncrease: 100 },
-    increaseAttackSpeedNormal: { rarity: "normal", percentageIncrease: 20 },
-    increaseAttackSpeedRare: { rarity: "rare", percentageIncrease: 40 },
-    increaseAttackSpeedLegendary: { rarity: "legendary", percentageIncrease: 100 },
-    increaseAttackSpeedAncient: { rarity: "ancient", percentageIncrease: 150 },
+export const upgradeTypes = {
+    increaseDamage: {
+        values: { normal: 10, rare: 20, legendary: 50, ancient: 100 },
+        method: LevelUp.increaseDamage,
+        description: `Increase weapon damage by x%`,
+        icon: `testICONstring`,
+    },
+    increaseAttackSpeed: {
+        values: { normal: 20, rare: 40, legendary: 100, ancient: 150 },
+        method: LevelUp.increaseAttackSpeed,
+        description: `Increase weapon attack speed by x%`,
+        icon: `testICONstring`,
+    },
+    increaseXpDrops: {
+        values: { normal: 10, rare: 20, legendary: 40, ancient: 60 },
+        method: LevelUp.increaseAttackSpeed,
+        description: `Increase XP dropped from monsters by x%`,
+        icon: `testICONstring`,
+    },
+    decreaseMonsterMovementSpeed: {
+        values: { normal: 5, rare: 10, legendary: 15, ancient: 20 },
+        method: LevelUp.decreaseMonsterMovementSpeed,
+        description: `Decreases monster movement speed by x%`,
+        icon: `testICONstring`,
+    },
+};
+export const upgradeWeights = {
+    normal: 70,
+    rare: 20,
+    legendary: 5,
+    ancient: 2,
 };

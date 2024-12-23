@@ -1,7 +1,13 @@
 import { Enemy } from "./Classes/Enemy.js";
+import { LevelUp } from "./Classes/LevelUp.js";
 import { Bow } from "./Classes/Weapons/Bow.js";
 import { FireWand } from "./Classes/Weapons/FireWand.js";
-import { getRandomEnemyType, getRandomInt } from "./Helpers.js";
+import {
+    getRandomEnemyType,
+    getRandomInt,
+    getThreeRandomUpgrades,
+    rollSelectedUpgradeRarity,
+} from "./Helpers.js";
 import {
     enemyList,
     weaponList,
@@ -14,6 +20,7 @@ import {
     gameState,
     CANVAS_HEIGHT,
     CANVAS_WIDTH,
+    upgradeTypes,
 } from "./Shared.js";
 
 canvas.width = CANVAS_WIDTH;
@@ -187,6 +194,8 @@ function stateLogicChecks() {
 
 function levelup() {
     gameState.gamePaused = true;
+
+    LevelUp.displayUpgrades();
 
     setTimeout(() => {
         gameState.gamePaused = false;

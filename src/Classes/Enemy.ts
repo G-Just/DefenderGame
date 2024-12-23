@@ -15,6 +15,7 @@ export class Enemy {
     private attackSpeed: number;
     private color: string;
     private movementSpeed: number;
+    private xpDrop: number;
 
     public isAttacking: boolean;
 
@@ -31,6 +32,7 @@ export class Enemy {
         this.maxHealth = this.enemyType.health;
         this.color = this.enemyType.color;
         this.isAttacking = false;
+        this.xpDrop = this.enemyType.xpDrop;
     }
 
     getHealth(): number {
@@ -59,6 +61,14 @@ export class Enemy {
 
     getDamage(): number {
         return this.enemyType.damage;
+    }
+
+    setMovementSpeed(movementSpeed: number): void {
+        this.movementSpeed = movementSpeed;
+    }
+
+    setXpDrop(xpDrop: number): void {
+        this.xpDrop = xpDrop;
     }
 
     draw(): void {
