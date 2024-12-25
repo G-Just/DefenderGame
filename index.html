@@ -9,19 +9,19 @@
         <canvas id="canvas"></canvas>
         <div id="upgrade-wrapper">
             <div class="upgrade-card upgrade-1">
-                <div class="upgrade-card-name">Name</div>
-                <div class="upgrade-card-icon">Icon</div>
-                <div class="upgrade-card-info">Info</div>
+                <div class="upgrade-card-name"><p>Name</p></div>
+                <div class="upgrade-card-icon"><img src="" alt="">Icon</img></div>
+                <div class="upgrade-card-description"><p>Description</p></div>
             </div>
             <div class="upgrade-card upgrade-2">
-                <div class="upgrade-card-name">Name</div>
-                <div class="upgrade-card-icon">Icon</div>
-                <div class="upgrade-card-info">Info</div>
+                <div class="upgrade-card-name"><p>Name</p></div>
+                <div class="upgrade-card-icon"><img src="" alt="">Icon</img></div>
+                <div class="upgrade-card-description"><p>Description</p></div>
             </div>
             <div class="upgrade-card upgrade-3">
-                <div class="upgrade-card-name">Name</div>
-                <div class="upgrade-card-icon">Icon</div>
-                <div class="upgrade-card-info">Info</div>
+                <div class="upgrade-card-name"><p>Name</p></div>
+                <div class="upgrade-card-icon"><img src="" alt="">Icon</img></div>
+                <div class="upgrade-card-description"><p>Description</p></div>
             </div>
         </div>
     </body>
@@ -36,6 +36,26 @@
         referrerpolicy="no-referrer"
     ></script>
     <script type="module" src="./dist/Engine.js"></script>
+    <script>
+        document.querySelectorAll('.upgrade-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const deltaX = (x - centerX) / centerX;
+                const deltaY = (y - centerY) / centerY;
+                const rotateX = -deltaY * 15;
+                const rotateY = deltaX * 15;
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+            });
+        });
+    </script>
     <style>
         body {
             box-sizing: border-box;
@@ -46,6 +66,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            font-family: "Consolas";
         }
 
         #upgrade-wrapper {
@@ -61,23 +82,65 @@
             cursor: pointer;
             height: 450px;
             width: 350px;
+            border: 5px solid black;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            transition: transform 0.15s, box-shadow ease-in-out;
+        }
+
+        .upgrade-card:hover {
+            filter: brightness(1.2);
+            transform: scale(1.05);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
         }
 
         .upgrade-card-name {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             height: 15%;
-            border: 2px solid black;
             border-bottom: 0;
+            border-bottom: 2px solid black;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
         }
 
         .upgrade-card-icon {
             height: 50%;
-            border: 2px solid black;
-            border-bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .upgrade-card-info {
-            height: 35%;
-            border: 2px solid black;
+        .upgrade-card-icon img {
+            max-height: 100%;
+            max-width: 100%;
         }
+
+        .upgrade-card-description {
+            height: 35%;
+            border-top: 2px solid black;
+            padding: 0 10px;
+        }
+        /* for floating damage number */
+        .floating-damage {
+            position: absolute;
+            color: red;
+            font-size: 20px;
+            font-weight: bold;
+            animation: float-up 1s ease-out;
+        }
+
+        @keyframes float-up {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+    }
     </style>
 </html>

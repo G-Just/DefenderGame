@@ -1,4 +1,4 @@
-import { weaponTypes, enemyList, player } from "../Shared.js";
+import { weaponTypes, enemyList, player } from "../../Shared.js";
 export class Weapon {
     constructor(weaponType = "bow") {
         this.weaponType = weaponTypes[weaponType];

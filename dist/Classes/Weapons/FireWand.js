@@ -1,4 +1,4 @@
-import { Weapon } from "../Weapon.js";
+import { Weapon } from "./Weapon.js";
 import { Projectile } from "../Projectile.js";
 import { player } from "../../Shared.js";
 const fireBallShootingSound = new Howl({
@@ -15,7 +15,7 @@ export class FireWand extends Weapon {
             const distance = Math.hypot(closestEnemy.getPosition().x - player.getPosition().x);
             if (distance <= this.range) {
                 fireBallShootingSound.play();
-                return new Projectile(player.getPosition().x, player.getPosition().y, this.weaponType.damage, this.projectileSpeed, this.getSprite(), Math.atan2(closestEnemy.getPosition().y +
+                return new Projectile(player.getPosition().x, player.getPosition().y, this.damage, this.projectileSpeed, this.getSprite(), Math.atan2(closestEnemy.getPosition().y +
                     closestEnemy.getSize().height / 2 -
                     player.getPosition().y, closestEnemy.getPosition().x +
                     closestEnemy.getSize().width / 2 -

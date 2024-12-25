@@ -1,4 +1,4 @@
-import { Weapon } from "../Weapon.js";
+import { Weapon } from "./Weapon.js";
 import { Projectile } from "../Projectile.js";
 import { player } from "../../Shared.js";
 
@@ -22,7 +22,7 @@ export class Bow extends Weapon {
                 return new Projectile(
                     player.getPosition().x,
                     player.getPosition().y,
-                    this.weaponType.damage,
+                    this.damage,
                     this.projectileSpeed,
                     this.getSprite(),
                     Math.atan2(

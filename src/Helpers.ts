@@ -1,5 +1,5 @@
-import { LevelUp } from "./Classes/LevelUp.js";
-import { enemyTypes, Upgrade, upgradeTypes, upgradeWeights } from "./Shared.js";
+import { Weapon } from "./Classes/Weapons/Weapon.js";
+import { enemyTypes, Upgrade, upgradeTypes, upgradeWeights, weaponList } from "./Shared.js";
 
 export function getRandomInt(min: number, max: number) {
     min = Math.ceil(min);
@@ -8,15 +8,35 @@ export function getRandomInt(min: number, max: number) {
 }
 
 export function getRandomEnemyType(): string {
-    return Object.keys(enemyTypes)[Math.floor(Math.random() * Object.keys(enemyTypes).length)];
+    const enemyTypesArray = Object.entries(enemyTypes);
+    const totalChance = enemyTypesArray.reduce(
+        (sum, [_, enemy]) => sum + enemy.chanceToSpawnPercentage,
+        0
+    );
+    let randomChance = Math.random() * totalChance;
+
+    for (const [type, enemy] of enemyTypesArray) {
+        if (randomChance < enemy.chanceToSpawnPercentage) {
+            return type;
+        }
+        randomChance -= enemy.chanceToSpawnPercentage;
+    }
+
+    // Fallback in case of rounding errors
+    return enemyTypesArray[0][0];
+}
+
+export function getRandomWeapon(): Weapon {
+    return weaponList[getRandomInt(0, weaponList.length - 1)];
 }
 
 export function getThreeRandomUpgrades(): {
     upgradeName: string;
+    upgradeNameLabel: Function;
     upgradeRarity: string;
     upgradeIncrease: number;
-    upgradeMethod: LevelUp;
-    upgradeDescription: string;
+    upgradeFunction: Function;
+    upgradeDescription: Function;
     upgradeIcon: string;
 }[] {
     const upgradeKeys = Object.keys(upgradeTypes);
@@ -32,18 +52,19 @@ export function getThreeRandomUpgrades(): {
 
     return Array.from(selectedUpgrades).map((upgradeName) => {
         const upgradeValues = upgradeTypes[upgradeName].values as Upgrade;
-
+        const upgradeNameLabel = upgradeTypes[upgradeName].upgradeNameLabel as Function;
         const upgradeRarity = rollSelectedUpgradeRarity(upgradeValues) as keyof Upgrade;
         const upgradeIncrease = upgradeValues[upgradeRarity];
-        const upgradeMethod = upgradeTypes[upgradeName].method as LevelUp;
-        const upgradeDescription = upgradeTypes[upgradeName].description as string;
+        const upgradeFunction = upgradeTypes[upgradeName].upgradeFunction as Function;
+        const upgradeDescription = upgradeTypes[upgradeName].description as Function;
         const upgradeIcon = upgradeTypes[upgradeName].icon as string;
 
         return {
             upgradeName,
+            upgradeNameLabel,
             upgradeRarity,
             upgradeIncrease,
-            upgradeMethod,
+            upgradeFunction,
             upgradeDescription,
             upgradeIcon,
         };
@@ -63,4 +84,8 @@ export function rollSelectedUpgradeRarity(upgrade: Upgrade): string {
     }
 
     throw new Error("Failed to determine upgrade rarity. Check the weights.");
+}
+
+export function capitalizeFirstLetter(word: string) {
+    return String(word).charAt(0).toUpperCase() + String(word).slice(1);
 }

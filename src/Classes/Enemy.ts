@@ -12,12 +12,15 @@ export class Enemy {
     private currentHealth: number;
     private maxHealth: number;
     private name: string;
+    private damage: number;
     private attackSpeed: number;
     private color: string;
     private movementSpeed: number;
     private xpDrop: number;
-
-    public isAttacking: boolean;
+    private pointsDrop: number;
+    private damageTimeout: number | null = null;
+    private isFlashing: boolean = false;
+    private isAttacking: boolean = false;
 
     constructor(enemyType = "normal") {
         this.enemyType = enemyTypes[enemyType];
@@ -27,14 +30,16 @@ export class Enemy {
         this.x = CANVAS_WIDTH;
         this.height = this.enemyType.height;
         this.width = this.enemyType.width;
+        this.damage = this.enemyType.damage;
         this.attackSpeed = this.enemyType.attackSpeed;
         this.currentHealth = this.enemyType.health;
         this.maxHealth = this.enemyType.health;
         this.color = this.enemyType.color;
-        this.isAttacking = false;
         this.xpDrop = this.enemyType.xpDrop;
+        this.pointsDrop = this.enemyType.points;
     }
 
+    // ============= Getters =============
     getHealth(): number {
         return this.currentHealth;
     }
@@ -60,9 +65,18 @@ export class Enemy {
     }
 
     getDamage(): number {
-        return this.enemyType.damage;
+        return this.damage;
     }
 
+    getXpDrop(): number {
+        return this.xpDrop;
+    }
+
+    getIsAttacking(): boolean {
+        return this.isAttacking;
+    }
+
+    // ============= Setters =============
     setMovementSpeed(movementSpeed: number): void {
         this.movementSpeed = movementSpeed;
     }
@@ -71,6 +85,7 @@ export class Enemy {
         this.xpDrop = xpDrop;
     }
 
+    // ============= Other Methods =============
     draw(): void {
         pen.fillStyle = this.color;
         pen.fillRect(this.x, this.y, this.width, this.height);
@@ -85,7 +100,7 @@ export class Enemy {
 
     move(): void {
         if (this.x > 235) {
-            this.x -= this.enemyType.speed;
+            this.x -= this.movementSpeed;
         } else {
             this.isAttacking = true;
         }
@@ -93,7 +108,7 @@ export class Enemy {
 
     doDamage(): void {
         // console.log(`Enemy ${this.name} is attacking the wall for ${this.enemyType.damage} damage`);
-        wall.takeDamage(this.enemyType.damage);
+        wall.takeDamage(this.damage);
 
         // Animation for the enemy attacking
         const originalX = this.x;
@@ -106,16 +121,16 @@ export class Enemy {
     takeDamage(damage: number): void {
         this.currentHealth -= damage;
         if (this.currentHealth <= 0) {
-            gameState.score += this.enemyType.points;
-            gameState.currentXp += this.enemyType.xpDrop;
+            gameState.score += Math.round(this.pointsDrop);
+            gameState.currentXp += Math.round(this.xpDrop);
             gameState.enemiesKilled++;
             enemyList.splice(enemyList.indexOf(this), 1);
         } else {
             // Flash white when taking damage
-            const originalColor = this.color;
             this.color = "white";
+
             setTimeout(() => {
-                this.color = originalColor;
+                this.color = this.enemyType.color; // This has to be enemyTypeColor to avoid "white bug"
             }, 75);
         }
     }

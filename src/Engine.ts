@@ -2,12 +2,7 @@ import { Enemy } from "./Classes/Enemy.js";
 import { LevelUp } from "./Classes/LevelUp.js";
 import { Bow } from "./Classes/Weapons/Bow.js";
 import { FireWand } from "./Classes/Weapons/FireWand.js";
-import {
-    getRandomEnemyType,
-    getRandomInt,
-    getThreeRandomUpgrades,
-    rollSelectedUpgradeRarity,
-} from "./Helpers.js";
+import { getRandomEnemyType, getRandomInt } from "./Helpers.js";
 import {
     enemyList,
     weaponList,
@@ -20,8 +15,9 @@ import {
     gameState,
     CANVAS_HEIGHT,
     CANVAS_WIDTH,
-    upgradeTypes,
 } from "./Shared.js";
+
+let isGameRunning = false;
 
 canvas.width = CANVAS_WIDTH;
 canvas.height = CANVAS_HEIGHT;
@@ -31,7 +27,7 @@ background.src = "./dist/Art/Sprites/background.png";
 
 setInterval(() => {
     enemyList.push(new Enemy(getRandomEnemyType()));
-}, getRandomInt(500, 5000));
+}, getRandomInt(1000, 10000));
 
 weaponList.push(new Bow(), new FireWand());
 
@@ -101,7 +97,7 @@ function executeEnemyAttacking(): void {
 
             const lastTime = lastAttackTimes.get(enemy) || 0;
 
-            if (enemy.isAttacking && currentTime - lastTime >= interval) {
+            if (enemy.getIsAttacking() && currentTime - lastTime >= interval) {
                 enemy.doDamage();
                 lastAttackTimes.set(enemy, currentTime);
             }
@@ -132,9 +128,9 @@ function executeWeaponAttacking(): void {
                 lastAttackTimes.set(weapon, currentTime);
             }
         });
-        requestAnimationFrame(weaponAttackLoop); // Continue the loop.
+        requestAnimationFrame(weaponAttackLoop);
     }
-    requestAnimationFrame(weaponAttackLoop); // Start the loop.
+    requestAnimationFrame(weaponAttackLoop);
 }
 
 function projectileCollisionCheck(): void {
@@ -168,8 +164,20 @@ function projectileCollisionCheck(): void {
                 projectilePosition.y < enemyPosition.y + enemySize.height &&
                 projectilePosition.y + projectileSize.height > enemyPosition.y
             ) {
-                // TODO: make floating damage numbers
-                enemy.takeDamage(projectile.getDamage());
+                const damage = projectile.getDamage();
+
+                const damageElement = document.createElement("div");
+                damageElement.className = "floating-damage";
+                damageElement.textContent = damage.toString();
+                damageElement.style.left = `${enemyPosition.x}px`;
+                damageElement.style.top = `${enemyPosition.y}px`;
+                document.body.appendChild(damageElement);
+
+                setTimeout(() => {
+                    damageElement.remove();
+                }, 600);
+
+                enemy.takeDamage(damage);
                 projectileList.splice(j, 1);
             }
         }
@@ -178,15 +186,11 @@ function projectileCollisionCheck(): void {
 }
 
 function stateLogicChecks() {
-    if (gameState.gamePaused) {
-        return;
-    }
     if (gameState.currentXp >= gameState.xpToLevel) {
         gameState.level++;
         gameState.currentXp = 0;
         gameState.xpToLevel = Math.round(gameState.xpToLevel * 1.2);
 
-        // trigger a levelup event where player picks weapons / upgrades
         levelup();
     }
     requestAnimationFrame(stateLogicChecks);
@@ -194,16 +198,13 @@ function stateLogicChecks() {
 
 function levelup() {
     gameState.gamePaused = true;
-
+    isGameRunning = false;
     LevelUp.displayUpgrades();
-
-    setTimeout(() => {
-        gameState.gamePaused = false;
-        run();
-    }, 2000);
 }
 
-function run() {
+export function run() {
+    if (isGameRunning) return;
+    isGameRunning = true;
     drawLoop();
     executeEnemyAttacking();
     executeWeaponAttacking();

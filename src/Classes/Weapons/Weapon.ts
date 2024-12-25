@@ -1,5 +1,5 @@
-import { weaponTypes, WeaponType, enemyList, player } from "../Shared.js";
-import { Enemy } from "./Enemy.js";
+import { weaponTypes, WeaponType, enemyList, player } from "../../Shared.js";
+import { Enemy } from "../Enemy.js";
 
 export class Weapon {
     protected weaponType: WeaponType;
@@ -35,6 +35,22 @@ export class Weapon {
 
     getSprite(): HTMLImageElement {
         return this.projectileSprite;
+    }
+
+    getProjectileSpeed(): number {
+        return this.projectileSpeed;
+    }
+
+    setDamage(damage: number): void {
+        this.damage = damage;
+    }
+
+    setAttackSpeed(attackSpeed: number): void {
+        this.attackSpeed = attackSpeed;
+    }
+
+    setProjectileSpeed(projectileSpeed: number): void {
+        this.projectileSpeed = projectileSpeed;
     }
 
     shoot(): any {
