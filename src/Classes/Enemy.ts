@@ -82,7 +82,7 @@ export class Enemy {
     }
 
     setXpDrop(xpDrop: number): void {
-        this.xpDrop = xpDrop;
+        this.xpDrop = Math.round(xpDrop);
     }
 
     // ============= Other Methods =============

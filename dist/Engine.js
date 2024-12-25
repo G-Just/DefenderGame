@@ -1,7 +1,6 @@
 import { Enemy } from "./Classes/Enemy.js";
 import { LevelUp } from "./Classes/LevelUp.js";
 import { Bow } from "./Classes/Weapons/Bow.js";
-import { FireWand } from "./Classes/Weapons/FireWand.js";
 import { getRandomEnemyType, getRandomInt } from "./Helpers.js";
 import { enemyList, weaponList, player, wall, projectileList, FPS, canvas, pen, gameState, CANVAS_HEIGHT, CANVAS_WIDTH, } from "./Shared.js";
 let isGameRunning = false;
@@ -12,7 +11,7 @@ background.src = "./dist/Art/Sprites/background.png";
 setInterval(() => {
     enemyList.push(new Enemy(getRandomEnemyType()));
 }, getRandomInt(1000, 10000));
-weaponList.push(new Bow(), new FireWand());
+weaponList.push(new Bow());
 function drawLoop() {
     const interval = 1000 / FPS;
     let lastTime = 0;

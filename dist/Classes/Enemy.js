@@ -53,7 +53,7 @@ export class Enemy {
         this.movementSpeed = movementSpeed;
     }
     setXpDrop(xpDrop) {
-        this.xpDrop = xpDrop;
+        this.xpDrop = Math.round(xpDrop);
     }
     // ============= Other Methods =============
     draw() {

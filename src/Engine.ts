@@ -2,6 +2,7 @@ import { Enemy } from "./Classes/Enemy.js";
 import { LevelUp } from "./Classes/LevelUp.js";
 import { Bow } from "./Classes/Weapons/Bow.js";
 import { FireWand } from "./Classes/Weapons/FireWand.js";
+import { Kunai } from "./Classes/Weapons/Kunai.js";
 import { getRandomEnemyType, getRandomInt } from "./Helpers.js";
 import {
     enemyList,
@@ -29,7 +30,7 @@ setInterval(() => {
     enemyList.push(new Enemy(getRandomEnemyType()));
 }, getRandomInt(1000, 10000));
 
-weaponList.push(new Bow(), new FireWand());
+weaponList.push(new Bow());
 
 function drawLoop(): void {
     const interval = 1000 / FPS;

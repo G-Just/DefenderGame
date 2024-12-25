@@ -9,18 +9,21 @@ export class Weapon {
     protected range: number;
     protected projectileSprite: HTMLImageElement;
     protected projectileSpeed: number;
+    protected level: number;
 
-    constructor(weaponType: string = "bow") {
+    constructor(weaponType: string) {
         this.weaponType = weaponTypes[weaponType];
-        this.name = weaponType;
+        this.name = this.weaponType.name;
         this.attackSpeed = this.weaponType.attackSpeed;
         this.damage = this.weaponType.damage;
         this.projectileSprite = new Image();
         this.projectileSprite.src = this.weaponType.projectileSprite;
         this.range = this.weaponType.range;
         this.projectileSpeed = this.weaponType.projectileSpeed;
+        this.level = 1;
     }
 
+    // ============= Getters =============
     getAttackSpeed(): number {
         return this.attackSpeed;
     }
@@ -41,8 +44,13 @@ export class Weapon {
         return this.projectileSpeed;
     }
 
+    getLevel(): number {
+        return this.level;
+    }
+
+    // ============= Setters =============
     setDamage(damage: number): void {
-        this.damage = damage;
+        this.damage = Math.round(damage);
     }
 
     setAttackSpeed(attackSpeed: number): void {
@@ -53,6 +61,11 @@ export class Weapon {
         this.projectileSpeed = projectileSpeed;
     }
 
+    setLevel(newLevel: number): void {
+        this.level = newLevel;
+    }
+
+    // ============= Other Methods =============
     shoot(): any {
         console.warn(
             "Shoot method was called. This was called from the parent class.\n\nYou should override this method in the child class"

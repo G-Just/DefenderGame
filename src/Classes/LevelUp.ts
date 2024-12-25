@@ -1,4 +1,9 @@
-import { getRandomWeapon, getThreeRandomUpgrades } from "../Helpers.js";
+import {
+    pickRandomWeapon,
+    getThreeRandomUpgrades,
+    generateRandomWeapon,
+    getRandomUpgrade,
+} from "../Helpers.js";
 import { gameState, rarityColors, weaponList } from "../Shared.js";
 import { run } from "../Engine.js";
 
@@ -7,8 +12,20 @@ export class LevelUp {
         const upgradeScreen = document.getElementById("upgrade-wrapper");
         if (upgradeScreen) upgradeScreen.style.display = "flex";
 
-        const upgrades = getThreeRandomUpgrades();
-        const weapons = [getRandomWeapon(), getRandomWeapon(), getRandomWeapon()];
+        const weapons = [pickRandomWeapon(), pickRandomWeapon(), pickRandomWeapon()];
+
+        const upgrades = getThreeRandomUpgrades().map((upgrade, index) => {
+            if (upgrade.upgradeName === "getNewWeapon") {
+                const newWeapon = generateRandomWeapon();
+                if (newWeapon) {
+                    weapons[index] = newWeapon;
+                } else {
+                    return getRandomUpgrade(false);
+                }
+            }
+            return upgrade;
+        });
+
         const upgradeCards: (HTMLElement | null)[] = [
             document.querySelector(".upgrade-1"),
             document.querySelector(".upgrade-2"),
@@ -29,17 +46,24 @@ export class LevelUp {
             const iconElement: HTMLImageElement | null = card.querySelector(".upgrade-card-icon > img");
             const descriptionElement = card.querySelector(".upgrade-card-description > p");
 
-            if (nameElement) nameElement.innerHTML = upgrade.upgradeNameLabel(weapons[index].getName());
-            if (iconElement) iconElement.src = upgrade.upgradeIcon;
+            if (nameElement && typeof upgrade.upgradeNameLabel === "function") {
+                nameElement.innerHTML = upgrade.upgradeNameLabel(weapons[index].getName());
+            }
+            if (iconElement && typeof upgrade.upgradeIcon === "string")
+                iconElement.src = upgrade.upgradeIcon;
             if (descriptionElement) {
-                descriptionElement.innerHTML = upgrade.upgradeDescription(
-                    weapons[index].getName(),
-                    upgrade.upgradeIncrease
-                );
+                if (typeof upgrade.upgradeDescription === "function") {
+                    descriptionElement.innerHTML = upgrade.upgradeDescription(
+                        weapons[index].getName(),
+                        upgrade.upgradeIncrease
+                    );
+                }
             }
 
             const handleUpgradeClick = () => {
-                upgrade.upgradeFunction(weapons[index], upgrade.upgradeIncrease);
+                if (typeof upgrade.upgradeFunction === "function") {
+                    upgrade.upgradeFunction(weapons[index], upgrade.upgradeIncrease);
+                }
                 removeEventListeners();
                 resumeGame();
             };

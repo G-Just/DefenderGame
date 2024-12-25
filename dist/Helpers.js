@@ -1,4 +1,7 @@
-import { enemyTypes, upgradeTypes, upgradeWeights, weaponList } from "./Shared.js";
+import { Bow } from "./Classes/Weapons/Bow.js";
+import { FireWand } from "./Classes/Weapons/FireWand.js";
+import { Kunai } from "./Classes/Weapons/Kunai.js";
+import { enemyTypes, upgradeTypes, upgradeWeights, weaponList, weaponTypes } from "./Shared.js";
 export function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -17,35 +20,72 @@ export function getRandomEnemyType() {
     // Fallback in case of rounding errors
     return enemyTypesArray[0][0];
 }
-export function getRandomWeapon() {
+export function pickRandomWeapon() {
     return weaponList[getRandomInt(0, weaponList.length - 1)];
 }
+export function generateRandomWeapon() {
+    var _a;
+    const usedWeapons = weaponList.map((weapon) => weapon.getName());
+    const availableWeapons = Object.keys(weaponTypes).filter((weaponName) => !usedWeapons.includes(weaponName));
+    if (availableWeapons.length === 0) {
+        return false;
+    }
+    const randomWeaponName = (_a = weaponTypes[availableWeapons[getRandomInt(0, availableWeapons.length)]]) === null || _a === void 0 ? void 0 : _a.name;
+    switch (randomWeaponName) {
+        case "bow":
+            return new Bow();
+        case "fireWand":
+            return new FireWand();
+        case "kunai":
+            return new Kunai();
+        default:
+            return false; //no weapons available ignore
+    }
+}
+export function getRandomUpgrade(includeGetNewWeapon = true) {
+    let upgradeKeys = Object.keys(upgradeTypes);
+    if (!includeGetNewWeapon) {
+        upgradeKeys = upgradeKeys.filter((key) => key !== "getNewWeapon");
+    }
+    if (upgradeKeys.length === 0) {
+        throw new Error("No upgrade types available.");
+    }
+    const randomKey = upgradeKeys[Math.floor(Math.random() * upgradeKeys.length)];
+    const upgradeValues = upgradeTypes[randomKey].values;
+    const upgradeNameLabel = upgradeTypes[randomKey].upgradeNameLabel;
+    const upgradeRarity = rollSelectedUpgradeRarity(upgradeValues);
+    const upgradeIncrease = upgradeValues[upgradeRarity];
+    const upgradeFunction = upgradeTypes[randomKey].upgradeFunction;
+    const upgradeDescription = upgradeTypes[randomKey].description;
+    const upgradeIcon = upgradeTypes[randomKey].icon;
+    return {
+        upgradeName: randomKey,
+        upgradeNameLabel,
+        upgradeRarity,
+        upgradeIncrease,
+        upgradeFunction,
+        upgradeDescription,
+        upgradeIcon,
+    };
+}
 export function getThreeRandomUpgrades() {
-    const upgradeKeys = Object.keys(upgradeTypes);
-    if (upgradeKeys.length < 3) {
-        throw new Error("Not enough upgrade types to select three unique upgrades.");
+    const upgrades = new Set();
+    while (upgrades.size < 3) {
+        const upgrade = getRandomUpgrade();
+        upgrades.add(upgrade.upgradeName);
     }
-    const selectedUpgrades = new Set();
-    while (selectedUpgrades.size < 3) {
-        const randomKey = upgradeKeys[Math.floor(Math.random() * upgradeKeys.length)];
-        selectedUpgrades.add(randomKey);
-    }
-    return Array.from(selectedUpgrades).map((upgradeName) => {
-        const upgradeValues = upgradeTypes[upgradeName].values;
-        const upgradeNameLabel = upgradeTypes[upgradeName].upgradeNameLabel;
+    return Array.from(upgrades).map((upgradeName) => {
+        const upgrade = upgradeTypes[upgradeName];
+        const upgradeValues = upgrade.values;
         const upgradeRarity = rollSelectedUpgradeRarity(upgradeValues);
-        const upgradeIncrease = upgradeValues[upgradeRarity];
-        const upgradeFunction = upgradeTypes[upgradeName].upgradeFunction;
-        const upgradeDescription = upgradeTypes[upgradeName].description;
-        const upgradeIcon = upgradeTypes[upgradeName].icon;
         return {
             upgradeName,
-            upgradeNameLabel,
+            upgradeNameLabel: upgrade.upgradeNameLabel,
             upgradeRarity,
-            upgradeIncrease,
-            upgradeFunction,
-            upgradeDescription,
-            upgradeIcon,
+            upgradeIncrease: upgradeValues[upgradeRarity],
+            upgradeFunction: upgrade.upgradeFunction,
+            upgradeDescription: upgrade.description,
+            upgradeIcon: upgrade.icon,
         };
     });
 }

@@ -1,5 +1,8 @@
+import { Bow } from "./Classes/Weapons/Bow.js";
+import { FireWand } from "./Classes/Weapons/FireWand.js";
+import { Kunai } from "./Classes/Weapons/Kunai.js";
 import { Weapon } from "./Classes/Weapons/Weapon.js";
-import { enemyTypes, Upgrade, upgradeTypes, upgradeWeights, weaponList } from "./Shared.js";
+import { enemyTypes, Upgrade, upgradeTypes, upgradeWeights, weaponList, weaponTypes } from "./Shared.js";
 
 export function getRandomInt(min: number, max: number) {
     min = Math.ceil(min);
@@ -26,11 +29,35 @@ export function getRandomEnemyType(): string {
     return enemyTypesArray[0][0];
 }
 
-export function getRandomWeapon(): Weapon {
+export function pickRandomWeapon(): Weapon {
     return weaponList[getRandomInt(0, weaponList.length - 1)];
 }
 
-export function getThreeRandomUpgrades(): {
+export function generateRandomWeapon(): Weapon | false {
+    const usedWeapons: string[] = weaponList.map((weapon) => weapon.getName());
+    const availableWeapons: string[] = Object.keys(weaponTypes).filter(
+        (weaponName: string) => !usedWeapons.includes(weaponName)
+    );
+
+    if (availableWeapons.length === 0) {
+        return false;
+    }
+
+    const randomWeaponName =
+        weaponTypes[availableWeapons[getRandomInt(0, availableWeapons.length)]]?.name;
+    switch (randomWeaponName) {
+        case "bow":
+            return new Bow();
+        case "fireWand":
+            return new FireWand();
+        case "kunai":
+            return new Kunai();
+        default:
+            return false; //no weapons available ignore
+    }
+}
+
+export function getRandomUpgrade(includeGetNewWeapon: boolean = true): {
     upgradeName: string;
     upgradeNameLabel: Function;
     upgradeRarity: string;
@@ -38,35 +65,55 @@ export function getThreeRandomUpgrades(): {
     upgradeFunction: Function;
     upgradeDescription: Function;
     upgradeIcon: string;
-}[] {
-    const upgradeKeys = Object.keys(upgradeTypes);
-    if (upgradeKeys.length < 3) {
-        throw new Error("Not enough upgrade types to select three unique upgrades.");
+} {
+    let upgradeKeys = Object.keys(upgradeTypes);
+    if (!includeGetNewWeapon) {
+        upgradeKeys = upgradeKeys.filter((key) => key !== "getNewWeapon");
     }
-    const selectedUpgrades = new Set<string>();
-
-    while (selectedUpgrades.size < 3) {
-        const randomKey = upgradeKeys[Math.floor(Math.random() * upgradeKeys.length)];
-        selectedUpgrades.add(randomKey);
+    if (upgradeKeys.length === 0) {
+        throw new Error("No upgrade types available.");
     }
 
-    return Array.from(selectedUpgrades).map((upgradeName) => {
-        const upgradeValues = upgradeTypes[upgradeName].values as Upgrade;
-        const upgradeNameLabel = upgradeTypes[upgradeName].upgradeNameLabel as Function;
+    const randomKey = upgradeKeys[Math.floor(Math.random() * upgradeKeys.length)];
+    const upgradeValues = upgradeTypes[randomKey].values as Upgrade;
+    const upgradeNameLabel = upgradeTypes[randomKey].upgradeNameLabel as Function;
+    const upgradeRarity = rollSelectedUpgradeRarity(upgradeValues) as keyof Upgrade;
+    const upgradeIncrease = upgradeValues[upgradeRarity];
+    const upgradeFunction = upgradeTypes[randomKey].upgradeFunction as Function;
+    const upgradeDescription = upgradeTypes[randomKey].description as Function;
+    const upgradeIcon = upgradeTypes[randomKey].icon as string;
+
+    return {
+        upgradeName: randomKey,
+        upgradeNameLabel,
+        upgradeRarity,
+        upgradeIncrease,
+        upgradeFunction,
+        upgradeDescription,
+        upgradeIcon,
+    };
+}
+
+export function getThreeRandomUpgrades() {
+    const upgrades = new Set();
+
+    while (upgrades.size < 3) {
+        const upgrade = getRandomUpgrade();
+        upgrades.add(upgrade.upgradeName);
+    }
+
+    return Array.from(upgrades).map((upgradeName) => {
+        const upgrade = upgradeTypes[upgradeName as keyof typeof upgradeTypes];
+        const upgradeValues = upgrade.values as Upgrade;
         const upgradeRarity = rollSelectedUpgradeRarity(upgradeValues) as keyof Upgrade;
-        const upgradeIncrease = upgradeValues[upgradeRarity];
-        const upgradeFunction = upgradeTypes[upgradeName].upgradeFunction as Function;
-        const upgradeDescription = upgradeTypes[upgradeName].description as Function;
-        const upgradeIcon = upgradeTypes[upgradeName].icon as string;
-
         return {
             upgradeName,
-            upgradeNameLabel,
+            upgradeNameLabel: upgrade.upgradeNameLabel,
             upgradeRarity,
-            upgradeIncrease,
-            upgradeFunction,
-            upgradeDescription,
-            upgradeIcon,
+            upgradeIncrease: upgradeValues[upgradeRarity],
+            upgradeFunction: upgrade.upgradeFunction,
+            upgradeDescription: upgrade.description,
+            upgradeIcon: upgrade.icon,
         };
     });
 }
