@@ -3,7 +3,7 @@ import { Projectile } from "../Projectile.js";
 import { player } from "../../Shared.js";
 
 const kunaiThrowSound = new Howl({
-    src: ["../../dist/Art/Sound/kunaiThrowSFX.mp3"],
+    src: ["../../Art/Sound/kunaiThrowSFX.mp3"],
     volume: 0.1,
 });
 

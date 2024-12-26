@@ -87,7 +87,7 @@ export const enemyTypes: { [key: string]: EnemyType } = {
         damage: 10,
         attackSpeed: 1,
         points: 5,
-        xpDrop: 50,
+        xpDrop: 10,
         chanceToSpawnPercentage: 60,
     },
     fast: {
@@ -99,7 +99,7 @@ export const enemyTypes: { [key: string]: EnemyType } = {
         damage: 7,
         attackSpeed: 1.1,
         points: 5,
-        xpDrop: 50,
+        xpDrop: 10,
         chanceToSpawnPercentage: 40,
     },
     tank: {
@@ -111,7 +111,7 @@ export const enemyTypes: { [key: string]: EnemyType } = {
         damage: 20,
         attackSpeed: 0.7,
         points: 10,
-        xpDrop: 50,
+        xpDrop: 20,
         chanceToSpawnPercentage: 10,
     },
     elite: {
