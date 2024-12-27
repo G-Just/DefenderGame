@@ -2,7 +2,7 @@ import { Weapon } from "./Weapon.js";
 import { Projectile } from "../Projectile.js";
 import { player } from "../../Shared.js";
 const fireBallShootingSound = new Howl({
-    src: ["../dist/Art/Sound/fireBallSFX.mp3"],
+    src: ["./../dist/Art/Sound/fireBallSFX.mp3"],
     volume: 0.1,
 });
 export class FireWand extends Weapon {

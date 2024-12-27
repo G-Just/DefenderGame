@@ -3,7 +3,7 @@ import { Projectile } from "../Projectile.js";
 import { player } from "../../Shared.js";
 
 const bowShootingSound = new Howl({
-    src: ["../dist/Art/Sound/bowSFX.mp3"],
+    src: ["./../dist/Art/Sound/bowSFX.mp3"],
     volume: 0.1,
 });
 
