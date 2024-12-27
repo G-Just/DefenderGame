@@ -45,7 +45,7 @@ export class LevelUp {
                 iconElement.src = upgrade.upgradeIcon;
             if (descriptionElement) {
                 if (typeof upgrade.upgradeDescription === "function") {
-                    descriptionElement.innerHTML = upgrade.upgradeDescription(weapons[index].getName(), upgrade.upgradeIncrease);
+                    descriptionElement.innerHTML = upgrade.upgradeDescription(weapons[index], upgrade.upgradeIncrease);
                 }
             }
             const handleUpgradeClick = () => {

@@ -37,6 +37,8 @@ export type WeaponType = {
     range: number;
     projectileSprite: string;
     projectileSpeed: number;
+    projectileCount: number;
+    weaponDescription: string;
 };
 
 export type Upgrade = {
@@ -51,7 +53,7 @@ export const gameState = {
     score: 0,
     level: 1,
     currentXp: 0,
-    xpToLevel: 100,
+    xpToLevel: 30,
     enemiesKilled: 0,
     gameLost: false,
     gamePaused: false,
@@ -148,6 +150,8 @@ export const weaponTypes: { [key: string]: WeaponType } = {
         projectileSprite: "./dist/Art/Sprites/arrow.png",
         range: CANVAS_WIDTH * 0.6,
         projectileSpeed: 10,
+        projectileCount: 2,
+        weaponDescription: `Good all-rounder weapon`,
     },
     fireWand: {
         name: "fireWand",
@@ -156,6 +160,8 @@ export const weaponTypes: { [key: string]: WeaponType } = {
         projectileSprite: "./dist/Art/Sprites/fireBall.png",
         range: CANVAS_WIDTH * 0.9,
         projectileSpeed: 15,
+        projectileCount: 1,
+        weaponDescription: `Powerful long range wand, slow casting`,
     },
     kunai: {
         name: "kunai",
@@ -164,6 +170,8 @@ export const weaponTypes: { [key: string]: WeaponType } = {
         projectileSprite: "./dist/Art/Sprites/kunai.png",
         range: CANVAS_WIDTH * 0.3,
         projectileSpeed: 6,
+        projectileCount: 1,
+        weaponDescription: `Fast firing daggers with low damage`,
     },
 };
 
@@ -173,12 +181,12 @@ export const upgradeTypes: { [key: string]: { [key: string]: Upgrade | LevelUp |
             upgradeNameLabel: (weaponName: string): string =>
                 `${capitalizeFirstLetter(weaponName)} Damage +`,
             values: { normal: 5, rare: 7, legendary: 10, ancient: 15 },
-            upgradeFunction: (weapon: Weapon, amountPercentage: number): void => {
-                weapon.setDamage(weapon.getDamage() * (1 + amountPercentage / 100));
+            upgradeFunction: (weapon: Weapon, amount: number): void => {
+                weapon.setDamage(weapon.getDamage() * (1 + amount / 100));
                 weapon.setLevel(weapon.getLevel() + 1);
             },
-            description: (weaponName: Weapon, amount: number): string => {
-                return `Increase ${weaponName}'s damage by ${amount}%`;
+            description: (weapon: Weapon, amount: number): string => {
+                return `Increase ${weapon.getName()}'s damage by ${amount}%`;
             },
             icon: ``,
         },
@@ -186,12 +194,38 @@ export const upgradeTypes: { [key: string]: { [key: string]: Upgrade | LevelUp |
             upgradeNameLabel: (weaponName: string): string =>
                 `${capitalizeFirstLetter(weaponName)} Attack Speed +`,
             values: { normal: 5, rare: 7, legendary: 10, ancient: 12 },
-            upgradeFunction: (weapon: Weapon, amountPercentage: number): void => {
-                weapon.setAttackSpeed(weapon.getAttackSpeed() * (1 + amountPercentage / 100));
+            upgradeFunction: (weapon: Weapon, amount: number): void => {
+                weapon.setAttackSpeed(weapon.getAttackSpeed() * (1 + amount / 100));
                 weapon.setLevel(weapon.getLevel() + 1);
             },
-            description: (weaponName: string, amount: number): string => {
-                return `Increase ${weaponName}'s attack speed by ${amount}%`;
+            description: (weapon: Weapon, amount: number): string => {
+                return `Increase ${weapon.getName()}'s attack speed by ${amount}%`;
+            },
+            icon: ``,
+        },
+        increaseRange: {
+            upgradeNameLabel: (weaponName: string): string =>
+                `${capitalizeFirstLetter(weaponName)} Range +`,
+            values: { normal: 5, rare: 10, legendary: 15, ancient: 20 },
+            upgradeFunction: (weapon: Weapon, amount: number): void => {
+                weapon.setWeaponRange(weapon.getWeaponRange() * (1 + amount / 100));
+                weapon.setLevel(weapon.getLevel() + 1);
+            },
+            description: (weapon: Weapon, amount: number): string => {
+                return `Increase ${weapon.getName()}'s attack range by ${amount}%`;
+            },
+            icon: ``,
+        },
+        increaseProjectileCount: {
+            upgradeNameLabel: (weaponName: string): string =>
+                `${capitalizeFirstLetter(weaponName)} Projectile Count +`,
+            values: { normal: 1, rare: 1, legendary: 2, ancient: 3 },
+            upgradeFunction: (weapon: Weapon, amount: number): void => {
+                weapon.setProjectileCount(weapon.getProjectileCount() + amount);
+                weapon.setLevel(weapon.getLevel() + 1);
+            },
+            description: (weapon: Weapon, amount: number): string => {
+                return `Increase ${weapon.getName()}'s projectile count by ${amount}%`;
             },
             icon: ``,
         },
@@ -199,24 +233,22 @@ export const upgradeTypes: { [key: string]: { [key: string]: Upgrade | LevelUp |
             upgradeNameLabel: (weaponName: string): string =>
                 `${capitalizeFirstLetter(weaponName)} Projectile Speed +`,
             values: { normal: 2, rare: 5, legendary: 7, ancient: 10 },
-            upgradeFunction: (weapon: Weapon, amountPercentage: number): void => {
-                weapon.setProjectileSpeed(weapon.getProjectileSpeed() * (1 + amountPercentage / 100));
+            upgradeFunction: (weapon: Weapon, amount: number): void => {
+                weapon.setProjectileSpeed(weapon.getProjectileSpeed() * (1 + amount / 100));
                 weapon.setLevel(weapon.getLevel() + 1);
             },
-            description: (weaponName: string, amount: number): string => {
-                return `Increase ${weaponName}'s projectile speed by ${amount}%`;
+            description: (weapon: Weapon, amount: number): string => {
+                return `Increase ${weapon.getName()}'s projectile speed by ${amount}%`;
             },
             icon: ``,
         },
         increaseXpDrops: {
             upgradeNameLabel: (weaponName: string): string => `XP +`,
             values: { normal: 5, rare: 10, legendary: 12, ancient: 15 },
-            upgradeFunction: (weapon: Weapon, amountPercentage: number): void => {
-                enemyList.map((enemy) =>
-                    enemy.setXpDrop(enemy.getXpDrop() * (1 + amountPercentage / 100))
-                );
+            upgradeFunction: (weapon: Weapon, amount: number): void => {
+                enemyList.map((enemy) => enemy.setXpDrop(enemy.getXpDrop() * (1 + amount / 100)));
             },
-            description: (weaponName: string, amount: number): string => {
+            description: (weapon: Weapon, amount: number): string => {
                 return `Increase XP dropped by monsters by ${amount}%`;
             },
             icon: ``,
@@ -224,12 +256,12 @@ export const upgradeTypes: { [key: string]: { [key: string]: Upgrade | LevelUp |
         decreaseMonsterMovementSpeed: {
             upgradeNameLabel: (weaponName: string): string => `Monster Movement Speed -`,
             values: { normal: 2, rare: 4, legendary: 5, ancient: 10 },
-            upgradeFunction: (weapon: Weapon, amountPercentage: number): void => {
+            upgradeFunction: (weapon: Weapon, amount: number): void => {
                 enemyList.map((enemy) =>
-                    enemy.setMovementSpeed(enemy.getMovementSpeed() * (1 - amountPercentage / 100))
+                    enemy.setMovementSpeed(enemy.getMovementSpeed() * (1 - amount / 100))
                 );
             },
-            description: (weaponName: string, amount: number): string => {
+            description: (weapon: Weapon, amount: number): string => {
                 return `Decreases movement speed of all monsters by ${amount}%`;
             },
             icon: ``,
@@ -238,11 +270,13 @@ export const upgradeTypes: { [key: string]: { [key: string]: Upgrade | LevelUp |
             upgradeNameLabel: (weaponName: string): string =>
                 `New Weapon: ${capitalizeFirstLetter(weaponName)}`,
             values: { normal: 0, rare: 0, legendary: 0, ancient: 0 },
-            upgradeFunction: (weapon: Weapon, amountPercentage: number): void => {
+            upgradeFunction: (weapon: Weapon, amount: number): void => {
                 weaponList.push(weapon);
             },
-            description: (weaponName: string, amount: number): string => {
-                return `Acquire new weapon : ${capitalizeFirstLetter(weaponName)}`;
+            description: (weapon: Weapon, amount: number): string => {
+                return `Acquire new weapon : ${capitalizeFirstLetter(
+                    weapon.getName()
+                )} - ${weapon.getDescription()}`;
             },
             icon: ``,
         },

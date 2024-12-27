@@ -54,7 +54,7 @@ export class LevelUp {
             if (descriptionElement) {
                 if (typeof upgrade.upgradeDescription === "function") {
                     descriptionElement.innerHTML = upgrade.upgradeDescription(
-                        weapons[index].getName(),
+                        weapons[index],
                         upgrade.upgradeIncrease
                     );
                 }

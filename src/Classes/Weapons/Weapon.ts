@@ -6,10 +6,12 @@ export class Weapon {
     protected name: string;
     protected damage: number;
     protected attackSpeed: number;
+    protected projectileCount: number;
     protected range: number;
     protected projectileSprite: HTMLImageElement;
     protected projectileSpeed: number;
     protected level: number;
+    protected description: string;
 
     constructor(weaponType: string) {
         this.weaponType = weaponTypes[weaponType];
@@ -21,6 +23,8 @@ export class Weapon {
         this.range = this.weaponType.range;
         this.projectileSpeed = this.weaponType.projectileSpeed;
         this.level = 1;
+        this.projectileCount = this.weaponType.projectileCount;
+        this.description = this.weaponType.weaponDescription;
     }
 
     // ============= Getters =============
@@ -48,6 +52,18 @@ export class Weapon {
         return this.level;
     }
 
+    getProjectileCount(): number {
+        return this.projectileCount;
+    }
+
+    getWeaponRange(): number {
+        return this.range;
+    }
+
+    getDescription(): string {
+        return this.description;
+    }
+
     // ============= Setters =============
     setDamage(damage: number): void {
         this.damage = Math.round(damage);
@@ -63,6 +79,14 @@ export class Weapon {
 
     setLevel(newLevel: number): void {
         this.level = newLevel;
+    }
+
+    setProjectileCount(newProjectileCount: number): void {
+        this.projectileCount = newProjectileCount;
+    }
+
+    setWeaponRange(newRange: number): void {
+        this.range = newRange;
     }
 
     // ============= Other Methods =============

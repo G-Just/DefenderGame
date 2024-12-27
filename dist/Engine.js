@@ -86,8 +86,19 @@ function executeWeaponAttacking() {
             const lastTime = lastAttackTimes.get(weapon) || 0;
             if (currentTime - lastTime >= interval) {
                 const projectile = weapon.shoot();
+                const projectileCount = weapon.getProjectileCount();
                 if (projectile) {
                     projectileList.push(projectile);
+                    if (projectileCount > 1) {
+                        for (let i = 0; i < projectileCount - 1; i++) {
+                            setTimeout(() => {
+                                const newProjectile = weapon.shoot();
+                                if (newProjectile) {
+                                    projectileList.push(newProjectile);
+                                }
+                            }, 150 * (i + 1));
+                        }
+                    }
                 }
                 lastAttackTimes.set(weapon, currentTime);
             }
@@ -114,26 +125,28 @@ function projectileCollisionCheck() {
         for (let j = 0; j < projectileList.length; j++) {
             const enemy = enemyList[i];
             const projectile = projectileList[j];
-            const enemyPosition = enemy.getPosition();
-            const projectilePosition = projectile.getPosition();
-            const enemySize = enemy.getSize();
-            const projectileSize = projectile.getSize();
-            if (projectilePosition.x < enemyPosition.x + enemySize.width &&
-                projectilePosition.x + projectileSize.width > enemyPosition.x &&
-                projectilePosition.y < enemyPosition.y + enemySize.height &&
-                projectilePosition.y + projectileSize.height > enemyPosition.y) {
-                const damage = projectile.getDamage();
-                const damageElement = document.createElement("div");
-                damageElement.className = "floating-damage";
-                damageElement.textContent = damage.toString();
-                damageElement.style.left = `${enemyPosition.x}px`;
-                damageElement.style.top = `${enemyPosition.y}px`;
-                document.body.appendChild(damageElement);
-                setTimeout(() => {
-                    damageElement.remove();
-                }, 600);
-                enemy.takeDamage(damage);
-                projectileList.splice(j, 1);
+            if (enemy && projectile) {
+                const enemyPosition = enemy.getPosition();
+                const projectilePosition = projectile.getPosition();
+                const enemySize = enemy.getSize();
+                const projectileSize = projectile.getSize();
+                if (projectilePosition.x < enemyPosition.x + enemySize.width &&
+                    projectilePosition.x + projectileSize.width > enemyPosition.x &&
+                    projectilePosition.y < enemyPosition.y + enemySize.height &&
+                    projectilePosition.y + projectileSize.height > enemyPosition.y) {
+                    const damage = projectile.getDamage();
+                    const damageElement = document.createElement("div");
+                    damageElement.className = "floating-damage";
+                    damageElement.textContent = damage.toString();
+                    damageElement.style.left = `${enemyPosition.x}px`;
+                    damageElement.style.top = `${enemyPosition.y}px`;
+                    document.body.appendChild(damageElement);
+                    setTimeout(() => {
+                        damageElement.remove();
+                    }, 600);
+                    enemy.takeDamage(damage);
+                    projectileList.splice(j, 1);
+                }
             }
         }
     }

@@ -10,6 +10,8 @@ export class Weapon {
         this.range = this.weaponType.range;
         this.projectileSpeed = this.weaponType.projectileSpeed;
         this.level = 1;
+        this.projectileCount = this.weaponType.projectileCount;
+        this.description = this.weaponType.weaponDescription;
     }
     // ============= Getters =============
     getAttackSpeed() {
@@ -30,6 +32,15 @@ export class Weapon {
     getLevel() {
         return this.level;
     }
+    getProjectileCount() {
+        return this.projectileCount;
+    }
+    getWeaponRange() {
+        return this.range;
+    }
+    getDescription() {
+        return this.description;
+    }
     // ============= Setters =============
     setDamage(damage) {
         this.damage = Math.round(damage);
@@ -42,6 +53,12 @@ export class Weapon {
     }
     setLevel(newLevel) {
         this.level = newLevel;
+    }
+    setProjectileCount(newProjectileCount) {
+        this.projectileCount = newProjectileCount;
+    }
+    setWeaponRange(newRange) {
+        this.range = newRange;
     }
     // ============= Other Methods =============
     shoot() {
