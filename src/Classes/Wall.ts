@@ -1,4 +1,4 @@
-import { pen, CANVAS_WIDTH, CANVAS_HEIGHT } from "../Shared.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, pen } from "../Shared/General.js";
 
 export class Wall {
     private y: number;

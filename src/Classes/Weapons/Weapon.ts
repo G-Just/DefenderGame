@@ -1,4 +1,6 @@
-import { weaponTypes, WeaponType, enemyList, player } from "../../Shared.js";
+import { enemyList, player } from "../../Shared/States.js";
+import { WeaponType } from "../../Shared/Types.js";
+import { weaponTypes } from "../../Shared/Weapons.js";
 import { Enemy } from "../Enemy.js";
 
 export class Weapon {

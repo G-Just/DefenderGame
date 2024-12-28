@@ -3,9 +3,9 @@ import {
     getThreeRandomUpgrades,
     generateRandomWeapon,
     getRandomUpgrade,
-} from "../Helpers.js";
-import { gameState, rarityColors, weaponList } from "../Shared.js";
+} from "../Shared/Helpers.js";
 import { run } from "../Engine.js";
+import { gameState } from "../Shared/States.js";
 
 export class LevelUp {
     static displayUpgrades() {
@@ -35,11 +35,33 @@ export class LevelUp {
         upgradeCards.forEach((card, index) => {
             if (!card) return;
             const upgrade = upgrades[index];
-            card.style.backgroundColor = rarityColors[upgrade.upgradeRarity];
-            if (["rare", "legendary", "ancient"].includes(upgrade.upgradeRarity)) {
-                card.style.color = "white";
-            } else {
-                card.style.color = "black";
+            switch (upgrade.upgradeRarity) {
+                case "normal":
+                    card.style.color = "black";
+                    card.style.borderColor = "black";
+                    card.style.backgroundColor = "darkgray";
+                    card.setAttribute("data-before", "Normal");
+                    break;
+                case "rare":
+                    card.style.color = "white";
+                    card.style.borderColor = "black";
+                    card.style.backgroundColor = "#4682B4";
+                    card.setAttribute("data-before", "Rare");
+                    break;
+                case "legendary":
+                    card.style.color = "white";
+                    card.style.borderColor = "black";
+                    card.style.backgroundColor = "#B8860B";
+                    card.setAttribute("data-before", "Legendary");
+                    break;
+                case "ancient":
+                    card.style.color = "white";
+                    card.style.borderColor = "black";
+                    card.style.backgroundColor = "#800000";
+                    card.setAttribute("data-before", "Ancient");
+                    break;
+                default:
+                    break;
             }
 
             const nameElement = card.querySelector(".upgrade-card-name > p");
@@ -77,7 +99,6 @@ export class LevelUp {
             const resumeGame = () => {
                 if (upgradeScreen) upgradeScreen.style.display = "none";
                 gameState.gamePaused = false;
-                console.log(weaponList);
                 run();
             };
 

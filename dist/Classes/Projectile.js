@@ -1,4 +1,4 @@
-import { pen } from "../Shared.js";
+import { pen } from "../Shared/General.js";
 export class Projectile {
     constructor(x, y, damage, speed, sprite, direction) {
         this.x = x;

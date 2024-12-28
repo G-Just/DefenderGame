@@ -1,22 +1,9 @@
 import { Enemy } from "./Classes/Enemy.js";
 import { LevelUp } from "./Classes/LevelUp.js";
 import { Bow } from "./Classes/Weapons/Bow.js";
-import { FireWand } from "./Classes/Weapons/FireWand.js";
-import { Kunai } from "./Classes/Weapons/Kunai.js";
-import { getRandomEnemyType, getRandomInt } from "./Helpers.js";
-import {
-    enemyList,
-    weaponList,
-    player,
-    wall,
-    projectileList,
-    FPS,
-    canvas,
-    pen,
-    gameState,
-    CANVAS_HEIGHT,
-    CANVAS_WIDTH,
-} from "./Shared.js";
+import { canvas, CANVAS_HEIGHT, CANVAS_WIDTH, FPS, pen } from "./Shared/General.js";
+import { getRandomEnemyType, getRandomInt } from "./Shared/Helpers.js";
+import { enemyList, gameState, player, projectileList, wall, weaponList } from "./Shared/States.js";
 
 let isGameRunning = false;
 

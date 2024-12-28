@@ -1,7 +1,9 @@
-import { enemyTypes, gameState, wall, pen, enemyList, CANVAS_WIDTH, CANVAS_HEIGHT } from "../Shared.js";
-import { getRandomInt } from "../Helpers.js";
+import { enemyTypes } from "../Shared/Enemies.js";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, pen } from "../Shared/General.js";
+import { getRandomInt } from "../Shared/Helpers.js";
+import { enemyList, gameState, wall } from "../Shared/States.js";
 
-import type { EnemyType } from "../Shared.js";
+import type { EnemyType } from "../Shared/Types.js";
 
 export class Enemy {
     private y: number;
@@ -21,6 +23,7 @@ export class Enemy {
     private damageTimeout: number | null = null;
     private isFlashing: boolean = false;
     private isAttacking: boolean = false;
+    private sprite: string;
 
     constructor(enemyType = "normal") {
         this.enemyType = enemyTypes[enemyType];
@@ -37,6 +40,7 @@ export class Enemy {
         this.color = this.enemyType.color;
         this.xpDrop = this.enemyType.xpDrop;
         this.pointsDrop = this.enemyType.points;
+        this.sprite = this.enemyType.sprite;
     }
 
     // ============= Getters =============

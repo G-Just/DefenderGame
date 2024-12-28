@@ -1,4 +1,4 @@
-import { pen } from "../Shared.js";
+import { pen } from "../Shared/General.js";
 
 export class Projectile {
     private x: number;

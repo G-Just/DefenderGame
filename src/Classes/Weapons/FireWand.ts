@@ -1,6 +1,6 @@
 import { Weapon } from "./Weapon.js";
 import { Projectile } from "../Projectile.js";
-import { player } from "../../Shared.js";
+import { player } from "../../Shared/States.js";
 
 const fireBallShootingSound = new Howl({
     src: ["./dist/Art/Sound/fireBallSFX.mp3"],

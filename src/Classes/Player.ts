@@ -1,4 +1,4 @@
-import { pen, CANVAS_HEIGHT } from "../Shared.js";
+import { CANVAS_HEIGHT, pen } from "../Shared/General.js";
 
 export class Player {
     private y: number = 0;

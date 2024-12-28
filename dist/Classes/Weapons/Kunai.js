@@ -1,6 +1,6 @@
 import { Weapon } from "./Weapon.js";
 import { Projectile } from "../Projectile.js";
-import { player } from "../../Shared.js";
+import { player } from "../../Shared/States.js";
 const kunaiThrowSound = new Howl({
     src: ["./dist/Art/Sound/kunaiThrowSFX.mp3"],
     volume: 0.1,
