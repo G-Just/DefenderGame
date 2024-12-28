@@ -17,6 +17,32 @@ export class Wall {
         this.maxWallHealth = 1000;
     }
 
+    // ============= Getters =============
+
+    getCurrentHealth(): number {
+        return this.currentWallHealth;
+    }
+
+    getMaxHealth(): number {
+        return this.maxWallHealth;
+    }
+
+    // ============= Setters =============
+
+    setCurrentHealth(newHealth: number): void {
+        if (newHealth >= this.maxWallHealth) {
+            this.currentWallHealth = this.maxWallHealth;
+        } else {
+            this.currentWallHealth = newHealth;
+        }
+    }
+
+    setMaxHealth(newHealth: number): void {
+        this.maxWallHealth = newHealth;
+    }
+
+    // ============= Other Methods =============
+
     // TODO: Implement health bar smoothing
     // healthBarSmoothing(targetHealth: number): void {
     //     const percentageHealth = (590 * this.currentWallHealth) / this.maxWallHealth;

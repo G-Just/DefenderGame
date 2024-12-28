@@ -1,5 +1,5 @@
 import { capitalizeFirstLetter } from "./Helpers.js";
-import { enemyList, weaponList } from "./States.js";
+import { enemyList, wall, weaponList } from "./States.js";
 export const upgradeTypes = {
     increaseDamage: {
         upgradeNameLabel: (weaponName) => `${capitalizeFirstLetter(weaponName)} Damage +`,
@@ -45,7 +45,7 @@ export const upgradeTypes = {
             weapon.setLevel(weapon.getLevel() + 1);
         },
         description: (weapon, amount) => {
-            return `Increase ${weapon.getName()}'s projectile count by ${amount}%`;
+            return `Increase ${weapon.getName()}'s projectile count by ${amount}`;
         },
         icon: ``,
     },
@@ -91,6 +91,17 @@ export const upgradeTypes = {
         },
         description: (weapon, amount) => {
             return `Acquire new weapon : ${capitalizeFirstLetter(weapon.getName())} - ${weapon.getDescription()}`;
+        },
+        icon: ``,
+    },
+    repairWall: {
+        upgradeNameLabel: (weaponName) => `Repair Wall`,
+        values: { normal: 5, rare: 10, legendary: 12, ancient: 15 },
+        upgradeFunction: (weapon, amount) => {
+            wall.setCurrentHealth(wall.getCurrentHealth() * (1 + amount / 100));
+        },
+        description: (weapon, amount) => {
+            return `Repair the wall by ${amount}%`;
         },
         icon: ``,
     },

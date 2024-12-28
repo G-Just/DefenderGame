@@ -1,7 +1,7 @@
 import { LevelUp } from "../Classes/LevelUp.js";
 import { Weapon } from "../Classes/Weapons/Weapon.js";
 import { capitalizeFirstLetter } from "./Helpers.js";
-import { enemyList, weaponList } from "./States.js";
+import { enemyList, gameState, wall, weaponList } from "./States.js";
 import { Upgrade } from "./Types.js";
 
 export const upgradeTypes: { [key: string]: { [key: string]: Upgrade | LevelUp | string | Function } } =
@@ -54,7 +54,7 @@ export const upgradeTypes: { [key: string]: { [key: string]: Upgrade | LevelUp |
                 weapon.setLevel(weapon.getLevel() + 1);
             },
             description: (weapon: Weapon, amount: number): string => {
-                return `Increase ${weapon.getName()}'s projectile count by ${amount}%`;
+                return `Increase ${weapon.getName()}'s projectile count by ${amount}`;
             },
             icon: ``,
         },
@@ -106,6 +106,17 @@ export const upgradeTypes: { [key: string]: { [key: string]: Upgrade | LevelUp |
                 return `Acquire new weapon : ${capitalizeFirstLetter(
                     weapon.getName()
                 )} - ${weapon.getDescription()}`;
+            },
+            icon: ``,
+        },
+        repairWall: {
+            upgradeNameLabel: (weaponName: string): string => `Repair Wall`,
+            values: { normal: 5, rare: 10, legendary: 12, ancient: 15 },
+            upgradeFunction: (weapon: Weapon, amount: number): void => {
+                wall.setCurrentHealth(wall.getCurrentHealth() * (1 + amount / 100));
+            },
+            description: (weapon: Weapon, amount: number): string => {
+                return `Repair the wall by ${amount}%`;
             },
             icon: ``,
         },

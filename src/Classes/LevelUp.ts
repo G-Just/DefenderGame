@@ -102,8 +102,9 @@ export class LevelUp {
                 run();
             };
 
+            // FIXME: this is not working, the event listener fires multiple times, logic for not running run() is defined within engine.ts
             removeEventListeners();
-            card.removeEventListener("click", handleUpgradeClick);
+
             card.addEventListener("click", handleUpgradeClick);
         });
     }

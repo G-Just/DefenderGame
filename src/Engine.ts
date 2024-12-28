@@ -192,20 +192,17 @@ function stateLogicChecks() {
         gameState.currentXp = 0;
         gameState.xpToLevel = Math.round(gameState.xpToLevel * 1.2);
 
-        levelup();
+        gameState.gamePaused = true;
+        resetGameLoop();
+        LevelUp.displayUpgrades();
     }
     requestAnimationFrame(stateLogicChecks);
-}
-
-function levelup() {
-    gameState.gamePaused = true;
-    isGameRunning = false;
-    LevelUp.displayUpgrades();
 }
 
 export function run() {
     if (isGameRunning) return;
     isGameRunning = true;
+    console.log("run fn call");
     drawLoop();
     executeEnemyAttacking();
     executeWeaponAttacking();
@@ -214,3 +211,7 @@ export function run() {
 }
 
 run();
+
+export function resetGameLoop() {
+    isGameRunning = false; // Allow `run` to be called again
+}

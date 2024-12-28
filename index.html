@@ -7,13 +7,27 @@
     </head>
     <body>
         <button id="debug" style="position: absolute; bottom: 20px; left: 20px">DEBUG</button>
-        <div id="debug-menu" style="display: none; padding: 20px; background-color: white; position: absolute; top:50%; left:50%; transform: translate(-50%, -50%);">
+        <div id="debug-menu" style="z-index: 999; display: none; padding: 20px; background-color: white; position: absolute; top:50%; left:50%; transform: translate(-50%, -50%);">
             <h1 style="text-align: center;">Debug Menu</h1>
             <hr>
-            <div>
-                <button id="debug-level">Get LEVEL</button>
-                <button>GET WEAPON (NOT IMPLEMENTED)</button>
-                <button>SPAWN ENEMY (NOT IMPLEMENTED)</button>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button id="debug-level">LeveUp</button>
+                <button id="debug-pause-game">Pause Game</button>
+
+                <div id="weapon-dropdown">
+                    <label for="weapon-select">Get Weapon:</label>
+                    <select id="weapon-select">
+                    </select>
+                    <button id="get-weapon-button">Get</button>
+                </div>
+                
+                <div id="enemy-dropdown">
+                    <label for="enemy-select">Spawn Enemy:</label>
+                    <select id="enemy-select">
+                    </select>
+                    <button id="spawn-enemy-button">Spawn</button>
+                </div>
+
             </div>
         </div>
         <canvas id="canvas"></canvas>
