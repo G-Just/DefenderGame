@@ -11,6 +11,7 @@ export const weaponTypes: { [key: string]: WeaponType } = {
         projectileSpeed: 10,
         projectileCount: 1,
         weaponDescription: `Good all-rounder weapon`,
+        shootSound: "./dist/Art/Sound/kunaiThrowSFX.mp3",
     },
     fireWand: {
         name: "fireWand",
@@ -21,6 +22,7 @@ export const weaponTypes: { [key: string]: WeaponType } = {
         projectileSpeed: 15,
         projectileCount: 1,
         weaponDescription: `Slow casting, but powerful long range weapon`,
+        shootSound: "./dist/Art/Sound/kunaiThrowSFX.mp3",
     },
     kunai: {
         name: "kunai",
@@ -31,5 +33,6 @@ export const weaponTypes: { [key: string]: WeaponType } = {
         projectileSpeed: 6,
         projectileCount: 1,
         weaponDescription: `Fast firing daggers with low damage`,
+        shootSound: "./dist/Art/Sound/kunaiThrowSFX.mp3",
     },
 };

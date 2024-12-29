@@ -1,7 +1,4 @@
-import { Bow } from "../Classes/Weapons/Bow.js";
-import { FireWand } from "../Classes/Weapons/FireWand.js";
-import { Kunai } from "../Classes/Weapons/Kunai.js";
-import { Weapon } from "../Classes/Weapons/Weapon.js";
+import { Weapon } from "../Classes/Weapon.js";
 import { enemyTypes } from "./Enemies.js";
 import { weaponList } from "./States.js";
 import { Upgrade } from "./Types.js";
@@ -14,7 +11,7 @@ export function getRandomInt(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export function getRandomEnemyType(): string {
+export function getRandomWeightedEnemyType(): string {
     const enemyTypesArray = Object.entries(enemyTypes);
     const totalChance = enemyTypesArray.reduce(
         (sum, [_, enemy]) => sum + enemy.chanceToSpawnPercentage,
@@ -47,18 +44,9 @@ export function generateRandomWeapon(): Weapon | false {
         return false;
     }
 
-    const randomWeaponName =
-        weaponTypes[availableWeapons[getRandomInt(0, availableWeapons.length)]]?.name;
-    switch (randomWeaponName) {
-        case "bow":
-            return new Bow();
-        case "fireWand":
-            return new FireWand();
-        case "kunai":
-            return new Kunai();
-        default:
-            return false; //no weapons available ignore
-    }
+    const randomWeaponName = availableWeapons[getRandomInt(0, availableWeapons.length - 1)];
+
+    return new Weapon(randomWeaponName);
 }
 
 export function getRandomUpgrade(includeGetNewWeapon: boolean = true): {

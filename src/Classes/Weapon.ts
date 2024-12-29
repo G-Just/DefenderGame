@@ -1,19 +1,21 @@
-import { enemyList, player } from "../../Shared/States.js";
-import { WeaponType } from "../../Shared/Types.js";
-import { weaponTypes } from "../../Shared/Weapons.js";
-import { Enemy } from "../Enemy.js";
+import { enemyList, player } from "../Shared/States.js";
+import { WeaponType } from "../Shared/Types.js";
+import { weaponTypes } from "../Shared/Weapons.js";
+import { Enemy } from "./Enemy.js";
+import { Projectile } from "./Projectile.js";
 
 export class Weapon {
-    protected weaponType: WeaponType;
-    protected name: string;
-    protected damage: number;
-    protected attackSpeed: number;
-    protected projectileCount: number;
-    protected range: number;
-    protected projectileSprite: HTMLImageElement;
-    protected projectileSpeed: number;
-    protected level: number;
-    protected description: string;
+    private weaponType: WeaponType;
+    private name: string;
+    private damage: number;
+    private attackSpeed: number;
+    private projectileCount: number;
+    private range: number;
+    private projectileSprite: HTMLImageElement;
+    private projectileSpeed: number;
+    private level: number;
+    private description: string;
+    private shootSound: Howl;
 
     constructor(weaponType: string) {
         this.weaponType = weaponTypes[weaponType];
@@ -27,6 +29,10 @@ export class Weapon {
         this.level = 1;
         this.projectileCount = this.weaponType.projectileCount;
         this.description = this.weaponType.weaponDescription;
+        this.shootSound = new Howl({
+            src: [this.weaponType.shootSound],
+            volume: 0.1,
+        });
     }
 
     // ============= Getters =============
@@ -92,10 +98,35 @@ export class Weapon {
     }
 
     // ============= Other Methods =============
-    shoot(): any {
-        console.warn(
-            "Shoot method was called. This was called from the parent class.\n\nYou should override this method in the child class"
-        );
+
+    shoot(): Projectile | null {
+        //TODO: add another targeting method like -> highest HP, fastest, slowest, lowest HP
+
+        const closestEnemy = this.getClosestEnemy();
+
+        if (closestEnemy) {
+            const distance = Math.hypot(closestEnemy.getPosition().x - player.getPosition().x);
+            if (distance <= this.range) {
+                this.shootSound.play();
+                return new Projectile(
+                    player.getPosition().x,
+                    player.getPosition().y,
+                    this.damage,
+                    this.projectileSpeed,
+                    this.getSprite(),
+                    Math.atan2(
+                        closestEnemy.getPosition().y +
+                            closestEnemy.getSize().height / 2 -
+                            player.getPosition().y,
+
+                        closestEnemy.getPosition().x +
+                            closestEnemy.getSize().width / 2 -
+                            player.getPosition().x
+                    )
+                );
+            }
+        }
+        return null;
     }
 
     getClosestEnemy(): Enemy | null {

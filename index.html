@@ -6,6 +6,8 @@
         <title>DefenderGame</title>
     </head>
     <body>
+
+        <!-- DEBUGGING -->
         <button id="debug" style="position: absolute; bottom: 20px; left: 20px">DEBUG</button>
         <div id="debug-menu" style="z-index: 999; display: none; padding: 20px; background-color: white; position: absolute; top:50%; left:50%; transform: translate(-50%, -50%);">
             <h1 style="text-align: center;">Debug Menu</h1>
@@ -13,7 +15,8 @@
             <div style="display: flex; flex-direction: column; gap: 10px;">
                 <button id="debug-level">LeveUp</button>
                 <button id="debug-pause-game">Pause Game</button>
-
+                <button id="debug-log-states">Log States</button>
+                
                 <div id="weapon-dropdown">
                     <label for="weapon-select">Get Weapon:</label>
                     <select id="weapon-select">
@@ -27,9 +30,11 @@
                     </select>
                     <button id="spawn-enemy-button">Spawn</button>
                 </div>
-
+                
             </div>
         </div>
+        <!-- DEBUGGING -->
+
         <canvas id="canvas"></canvas>
         <div id="upgrade-wrapper">
             <div class="upgrade-card upgrade-1">

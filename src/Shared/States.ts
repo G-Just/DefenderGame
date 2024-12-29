@@ -2,7 +2,7 @@ import { Enemy } from "../Classes/Enemy.js";
 import { Player } from "../Classes/Player.js";
 import { Projectile } from "../Classes/Projectile.js";
 import { Wall } from "../Classes/Wall.js";
-import { Weapon } from "../Classes/Weapons/Weapon.js";
+import { Weapon } from "../Classes/Weapon.js";
 
 export const gameState = {
     score: 0,

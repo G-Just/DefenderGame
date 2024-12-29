@@ -31,6 +31,7 @@ export type WeaponType = {
     projectileSpeed: number;
     projectileCount: number;
     weaponDescription: string;
+    shootSound: string;
 };
 
 export type Upgrade = {

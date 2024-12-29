@@ -1,10 +1,8 @@
 import { Enemy } from "./Classes/Enemy.js";
-import { Bow } from "./Classes/Weapons/Bow.js";
-import { FireWand } from "./Classes/Weapons/FireWand.js";
-import { Kunai } from "./Classes/Weapons/Kunai.js";
+import { Weapon } from "./Classes/Weapon.js";
 import { resetGameLoop, run } from "./Engine.js";
 import { enemyTypes } from "./Shared/Enemies.js";
-import { enemyList, gameState, weaponList } from "./Shared/States.js";
+import { enemyList, gameState, projectileList, weaponList } from "./Shared/States.js";
 import { weaponTypes } from "./Shared/Weapons.js";
 
 const debugMenu = document.getElementById("debug-menu");
@@ -14,6 +12,7 @@ const levelButton = document.getElementById("debug-level");
 const spawnEnemyButton = document.getElementById("spawn-enemy-button");
 const getWeaponButton = document.getElementById("get-weapon-button");
 const pauseButton = document.getElementById("debug-pause-game");
+const logStatesButton = document.getElementById("debug-log-states");
 
 const selectedEnemy = document.getElementById("enemy-select") as HTMLSelectElement;
 const selectedWeapon = document.getElementById("weapon-select") as HTMLSelectElement;
@@ -24,12 +23,21 @@ debugButton?.addEventListener("click", () => {
     }
 });
 
+logStatesButton?.addEventListener("click", () => {
+    console.log("Game State : ", gameState);
+    console.log("Weapon List: ", weaponList);
+    console.log("Enemy List : ", enemyList);
+    console.log("Projectile List : ", projectileList);
+    pauseButton?.click();
+});
+
 levelButton?.addEventListener("click", () => {
     gameState.currentXp = gameState.xpToLevel;
     if (debugMenu) {
         debugMenu.style.display = "none";
     }
 });
+
 pauseButton?.addEventListener("click", () => {
     if (pauseButton.innerText === "Pause Game") {
         gameState.gamePaused = true;
@@ -46,6 +54,7 @@ getWeaponButton?.addEventListener("click", () => {
     getWeapon(selectedWeapon.value);
     populateDropdown("weapon-select", availableWeapons());
 });
+
 spawnEnemyButton?.addEventListener("click", () => {
     spawnEnemy(selectedEnemy.value);
     populateDropdown("enemy-select", availableEnemies());
@@ -83,19 +92,7 @@ const availableEnemies = () => {
 };
 
 function getWeapon(weaponName: string): void {
-    switch (weaponName) {
-        case "bow":
-            weaponList.push(new Bow());
-            break;
-        case "fireWand":
-            weaponList.push(new FireWand());
-            break;
-        case "kunai":
-            weaponList.push(new Kunai());
-            break;
-        default:
-            break;
-    }
+    weaponList.push(new Weapon(weaponName));
 }
 
 function spawnEnemy(enemyType: string): void {

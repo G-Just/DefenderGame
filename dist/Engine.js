@@ -1,8 +1,8 @@
 import { Enemy } from "./Classes/Enemy.js";
 import { LevelUp } from "./Classes/LevelUp.js";
-import { Bow } from "./Classes/Weapons/Bow.js";
+import { Weapon } from "./Classes/Weapon.js";
 import { canvas, CANVAS_HEIGHT, CANVAS_WIDTH, FPS, pen } from "./Shared/General.js";
-import { getRandomEnemyType, getRandomInt } from "./Shared/Helpers.js";
+import { getRandomWeightedEnemyType, getRandomInt } from "./Shared/Helpers.js";
 import { enemyList, gameState, player, projectileList, wall, weaponList } from "./Shared/States.js";
 let isGameRunning = false;
 canvas.width = CANVAS_WIDTH;
@@ -10,9 +10,9 @@ canvas.height = CANVAS_HEIGHT;
 const background = new Image();
 background.src = "./dist/Art/Sprites/background.png";
 setInterval(() => {
-    enemyList.push(new Enemy(getRandomEnemyType()));
+    enemyList.push(new Enemy(getRandomWeightedEnemyType()));
 }, getRandomInt(1000, 10000));
-weaponList.push(new Bow());
+weaponList.push(new Weapon("bow"));
 function drawLoop() {
     const interval = 1000 / FPS;
     let lastTime = 0;
@@ -168,7 +168,6 @@ export function run() {
     if (isGameRunning)
         return;
     isGameRunning = true;
-    console.log("run fn call");
     drawLoop();
     executeEnemyAttacking();
     executeWeaponAttacking();

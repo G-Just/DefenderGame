@@ -3,7 +3,6 @@ Need to implement UI where weapons can be displayed.
     Maybe show the comedown until the next shot.
 
 New upgrades:
-    Repair wall,
     Bouncing projectiles?
 
 New weapon:

@@ -1,23 +1,36 @@
 import { pickRandomWeapon, getThreeRandomUpgrades, generateRandomWeapon, getRandomUpgrade, } from "../Shared/Helpers.js";
 import { run } from "../Engine.js";
-import { gameState } from "../Shared/States.js";
+import { gameState, wall } from "../Shared/States.js";
 export class LevelUp {
     static displayUpgrades() {
         const upgradeScreen = document.getElementById("upgrade-wrapper");
         if (upgradeScreen)
             upgradeScreen.style.display = "flex";
         const weapons = [pickRandomWeapon(), pickRandomWeapon(), pickRandomWeapon()];
-        const upgrades = getThreeRandomUpgrades().map((upgrade, index) => {
-            if (upgrade.upgradeName === "getNewWeapon") {
-                const newWeapon = generateRandomWeapon();
-                if (newWeapon) {
-                    weapons[index] = newWeapon;
-                }
-                else {
-                    return getRandomUpgrade(false);
-                }
+        const handleGetNewWeapon = (index) => {
+            const newWeapon = generateRandomWeapon();
+            if (newWeapon) {
+                weapons[index] = newWeapon;
+                return null; // No need to replace the upgrade
             }
-            return upgrade;
+            return getRandomUpgrade(false); // Fallback if no available weapon
+        };
+        const handleRepairWall = (index) => {
+            const result = wall.getCurrentHealth() >= wall.getMaxHealth() ? getRandomUpgrade() : null; // No change needed if wall can be repaired
+            if (result && result.upgradeName === "getNewWeapon") {
+                return handleGetNewWeapon(index);
+            }
+            return result;
+        };
+        const upgrades = getThreeRandomUpgrades().map((upgrade, index) => {
+            switch (upgrade.upgradeName) {
+                case "getNewWeapon":
+                    return handleGetNewWeapon(index) || upgrade;
+                case "repairWall":
+                    return handleRepairWall(index) || upgrade;
+                default:
+                    return upgrade;
+            }
         });
         const upgradeCards = [
             document.querySelector(".upgrade-1"),
@@ -73,23 +86,20 @@ export class LevelUp {
                 if (typeof upgrade.upgradeFunction === "function") {
                     upgrade.upgradeFunction(weapons[index], upgrade.upgradeIncrease);
                 }
-                removeEventListeners();
+                console.log(upgrade.upgradeName);
                 resumeGame();
             };
-            const removeEventListeners = () => {
-                upgradeCards.forEach((card) => {
-                    card === null || card === void 0 ? void 0 : card.removeEventListener("click", handleUpgradeClick);
-                });
-            };
+            if (card._upgradeClickListener) {
+                card.removeEventListener("click", card._upgradeClickListener);
+            }
+            card._upgradeClickListener = handleUpgradeClick;
+            card.addEventListener("click", handleUpgradeClick);
             const resumeGame = () => {
                 if (upgradeScreen)
                     upgradeScreen.style.display = "none";
                 gameState.gamePaused = false;
                 run();
             };
-            // FIXME: this is not working, the event listener fires multiple times, logic for not running run() is defined within engine.ts
-            removeEventListeners();
-            card.addEventListener("click", handleUpgradeClick);
         });
     }
 }

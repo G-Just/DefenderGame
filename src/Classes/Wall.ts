@@ -33,7 +33,7 @@ export class Wall {
         if (newHealth >= this.maxWallHealth) {
             this.currentWallHealth = this.maxWallHealth;
         } else {
-            this.currentWallHealth = newHealth;
+            this.currentWallHealth = Math.round(newHealth);
         }
     }
 

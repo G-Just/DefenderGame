@@ -1,7 +1,7 @@
 import { LevelUp } from "../Classes/LevelUp.js";
-import { Weapon } from "../Classes/Weapons/Weapon.js";
+import { Weapon } from "../Classes/Weapon.js";
 import { capitalizeFirstLetter } from "./Helpers.js";
-import { enemyList, gameState, wall, weaponList } from "./States.js";
+import { enemyList, wall, weaponList } from "./States.js";
 import { Upgrade } from "./Types.js";
 
 export const upgradeTypes: { [key: string]: { [key: string]: Upgrade | LevelUp | string | Function } } =
@@ -51,10 +51,11 @@ export const upgradeTypes: { [key: string]: { [key: string]: Upgrade | LevelUp |
             values: { normal: 1, rare: 1, legendary: 2, ancient: 3 },
             upgradeFunction: (weapon: Weapon, amount: number): void => {
                 weapon.setProjectileCount(weapon.getProjectileCount() + amount);
+                weapon.setDamage(weapon.getDamage() * 0.7);
                 weapon.setLevel(weapon.getLevel() + 1);
             },
             description: (weapon: Weapon, amount: number): string => {
-                return `Increase ${weapon.getName()}'s projectile count by ${amount}`;
+                return `Increase ${weapon.getName()}'s projectile count by ${amount}, but reduces the damage dealt by 30%`;
             },
             icon: ``,
         },
