@@ -13,6 +13,7 @@ const spawnEnemyButton = document.getElementById("spawn-enemy-button");
 const getWeaponButton = document.getElementById("get-weapon-button");
 const pauseButton = document.getElementById("debug-pause-game");
 const logStatesButton = document.getElementById("debug-log-states");
+const closeDebugButton = document.getElementById("close-debug-button");
 
 const selectedEnemy = document.getElementById("enemy-select") as HTMLSelectElement;
 const selectedWeapon = document.getElementById("weapon-select") as HTMLSelectElement;
@@ -20,6 +21,12 @@ const selectedWeapon = document.getElementById("weapon-select") as HTMLSelectEle
 debugButton?.addEventListener("click", () => {
     if (debugMenu) {
         debugMenu.style.display = debugMenu.style.display === "block" ? "none" : "block";
+    }
+});
+
+closeDebugButton?.addEventListener("click", () => {
+    if (debugMenu) {
+        debugMenu.style.display = "none";
     }
 });
 

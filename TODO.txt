@@ -19,7 +19,7 @@ General gameplay:
 Enemies:
     Add more interesting enemies:
         enemy that zig-zags
-        suicide bomber enemy -> 1hp runs to the wall and dies -> does high dmg
+        suicide bomber enemy -> 1? hp runs to the wall and dies -> does high dmg
 
 
 

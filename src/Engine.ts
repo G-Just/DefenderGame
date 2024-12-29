@@ -14,7 +14,9 @@ const background = new Image();
 background.src = "./dist/Art/Sprites/background.png";
 
 setInterval(() => {
-    enemyList.push(new Enemy(getRandomWeightedEnemyType()));
+    if (!gameState.gamePaused) {
+        enemyList.push(new Enemy(getRandomWeightedEnemyType()));
+    }
 }, getRandomInt(1000, 10000));
 
 weaponList.push(new Weapon("bow"));

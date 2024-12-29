@@ -11,11 +11,17 @@ const spawnEnemyButton = document.getElementById("spawn-enemy-button");
 const getWeaponButton = document.getElementById("get-weapon-button");
 const pauseButton = document.getElementById("debug-pause-game");
 const logStatesButton = document.getElementById("debug-log-states");
+const closeDebugButton = document.getElementById("close-debug-button");
 const selectedEnemy = document.getElementById("enemy-select");
 const selectedWeapon = document.getElementById("weapon-select");
 debugButton === null || debugButton === void 0 ? void 0 : debugButton.addEventListener("click", () => {
     if (debugMenu) {
         debugMenu.style.display = debugMenu.style.display === "block" ? "none" : "block";
+    }
+});
+closeDebugButton === null || closeDebugButton === void 0 ? void 0 : closeDebugButton.addEventListener("click", () => {
+    if (debugMenu) {
+        debugMenu.style.display = "none";
     }
 });
 logStatesButton === null || logStatesButton === void 0 ? void 0 : logStatesButton.addEventListener("click", () => {

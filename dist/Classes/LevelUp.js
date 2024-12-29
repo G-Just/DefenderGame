@@ -11,9 +11,9 @@ export class LevelUp {
             const newWeapon = generateRandomWeapon();
             if (newWeapon) {
                 weapons[index] = newWeapon;
-                return null; // No need to replace the upgrade
+                return null;
             }
-            return getRandomUpgrade(false); // Fallback if no available weapon
+            return getRandomUpgrade(false);
         };
         const handleRepairWall = (index) => {
             const result = wall.getCurrentHealth() >= wall.getMaxHealth() ? getRandomUpgrade() : null; // No change needed if wall can be repaired
